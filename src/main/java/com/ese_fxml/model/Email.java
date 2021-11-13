@@ -1,17 +1,19 @@
 package com.ese_fxml.model;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 
 //La classe Email specifica ID, mittente,  destinatario, argomento, testo etc..
+
+/**
+ * @author fede, nina, matto
+ */
 public class Email {
-    private IntegerProperty mailId;
-    private StringProperty mailSender;
-    private StringProperty mailReceiver;
-    private StringProperty mailObject;
-    private StringProperty mailText;
-    private BooleanProperty mailStared;
+    private final IntegerProperty mailId = new SimpleIntegerProperty();
+    private final StringProperty mailSender = new SimpleStringProperty();
+    private final StringProperty mailReceiver = new SimpleStringProperty();
+    private final StringProperty mailObject = new SimpleStringProperty();
+    private final StringProperty mailText = new SimpleStringProperty();
+    private final BooleanProperty mailStared = new SimpleBooleanProperty();
 
     public Email(int mailId, String mailSender, String mailReceiver, String mailObject, String mailText, boolean mailStared) {
         //setMailId(mailId);

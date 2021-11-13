@@ -3,6 +3,7 @@ package com.ese_fxml.controller;
 import com.ese_fxml.model.DataModel;
 import javafx.fxml.FXML;
 import com.ese_fxml.model.Email;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 
 /**
@@ -26,30 +27,30 @@ public class ListController {
 
         this.model = model;
 
-        model.loadData(null);//  aggiunto per far caricare i dati delle person
+        model.loadData(null);//  aggiunto per far caricare i dati delle email
 
-        listView.setItems(model.getPersonList());
+        listView.setItems(model.getEmailList());
 
         listView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) ->
-                model.setCurrentPerson(newSelection)); //aggiunge il listener di changed
+                model.setCurrentEmail(newSelection)); //aggiunge il listener di changed
 
 
-        model.currentPersonProperty().addListener((obs, oldPerson, newPerson) -> {
-            if (newPerson == null) {
+        model.currentEmailProperty().addListener((obs, oldEmail, newEmail) -> {
+            if (newEmail == null) {
                 listView.getSelectionModel().clearSelection();
             } else {
-                listView.getSelectionModel().select(newPerson);
+                listView.getSelectionModel().select(newEmail);
             }
         });
 
-        listView.setCellFactory((ListView<Person> lv) -> new ListCell<Person>() {
+        listView.setCellFactory((ListView<Email> lv) -> new ListCell<Email>() {
             @Override
-            public void updateItem(Person person, boolean empty) {
-                super.updateItem(person, empty);
+            public void updateItem(Email email, boolean empty) {
+                super.updateItem(email, empty);
                 if (empty) {
                     setText(null);
                 } else {
-                    setText(person.getFirstName() + " , " + person.getLastName());
+                    setText(email.getMailSender() + " , " + email.getMailReceiver());
                 }
             }
         });

@@ -10,44 +10,43 @@ import javafx.util.Callback;
 import java.io.File;
 
 /**
- *
- * @author liliana
+ * @author fede, nina, matto
  */
 public class DataModel {
 
     private final ObservableList<Email> emailList = FXCollections.observableArrayList(new Callback<Email, Observable[]>() {
         @Override
-        public Observable[] call(Email Email) {
-            return new Observable[] {com.ese_fxml.model.Email.firstNameProperty(), com.ese_fxml.model.Email.lastNameProperty()}; //StringProperty implementa Observable, quindi può essere inserito in un array di Observable per up-casting
+        public Observable[] call(Email email) {
+            return new Observable[] {email.mailSenderProperty(), email.mailReceiverProperty()}; //StringProperty implementa Observable, quindi può essere inserito in un array di Observable per up-casting
         }
     });
 
     private final ObjectProperty<Email> currentEmail = new SimpleObjectProperty<>(null);
 
     public ObjectProperty<Email> currentEmailProperty() {
-        return Email;
+        return currentEmail;
     }
 
     public final Email getCurrentEmail() {
-        return EmailProperty().get();
+        return currentEmailProperty().get();
     }
 
-    public final void setCurrentEmail(Email Email) {
-        com.ese_fxml.model.EmailProperty().set(com.ese_fxml.model.Email);
+    public final void setCurrentEmail(Email email) {
+        currentEmailProperty().set(email);
     }
 
     public ObservableList<Email> getEmailList() {
-        return EmailList ;
+        return emailList;
     }
 
     public void loadData(File file) {
         // mock...
-        EmailList.setAll(
-                new Email("Jacob", "Smith", "jacob.smith@example.com"),
-                new Email("Isabella", "Johnson","isabella.johnson@example.com"),
-                new Email("Ethan", "Williams", "ethan.williams@example.com"),
-                new Email("Emma", "Jones", "emma.jones@example.com"),
-                new Email("Michael", "Brown", "michael.brown@example.com")
+        emailList.setAll(
+                new Email(1, "Jacob", "Smith", "mail1", "text1", true),
+                new Email(2, "Isabella", "Johnson", "mail2", "text2", false),
+                new Email(3, "Ethan", "Williams", "mail3", "text3", true),
+                new Email(4, "Emma", "Jones", "mail4", "text4", false),
+                new Email(5, "Michael", "Brown", "mail5", "text5", true)
         );
     }
 
