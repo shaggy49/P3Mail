@@ -10,7 +10,7 @@ import javafx.collections.ObservableList;
 import java.util.*;
 
 /**
- * Classe Client, conterrà la lista di mail che sarà il model
+ * Classe Client, conterrà la lista di mail che sarà il model --> model
  */
 
 public class Client {
@@ -21,8 +21,7 @@ public class Client {
     /**
      * Costruttore della classe.
      *
-     * @param emailAddress   indirizzo email    
-     *
+     * @param emailAddress indirizzo email
      */
 
     public Client(String emailAddress) {
@@ -33,47 +32,42 @@ public class Client {
     }
 
     /**
-     * @return      lista di email  
-     *
+     * @return lista di email
      */
     public ListProperty<Email> inboxProperty() {
         return inbox;
     }
 
     /**
-     *
-     * @return   indirizzo email della casella postale   
-     *
+     * @return indirizzo email della casella postale
      */
     public StringProperty emailAddressProperty() {
         return emailAddress;
     }
 
     /**
-     *
-     * @return   elimina l'email specificata   
-     *
+     * @return elimina l'email specificata
      */
     public void deleteEmail(Email email) {
         inboxContent.remove(email);
     }
 
     /**
-     *genera email random da aggiungere alla lista di email, ese verranno mostrate nella ui
+     * genera email random da aggiungere alla lista di email, ese verranno mostrate nella ui
      */
     public void generateRandomEmails(int n) {
-        String[] people = new String[] {"Paolo", "Alessandro", "Enrico", "Giulia", "Gaia", "Simone"};
-        String[] subjects = new String[] {
+        String[] people = new String[]{"Paolo", "Alessandro", "Enrico", "Giulia", "Gaia", "Simone"};
+        String[] subjects = new String[]{
                 "Importante", "A proposito della nostra ultima conversazione", "Tanto va la gatta al lardo",
-                "Non dimenticare...", "Domani scuola" };
-        String[] texts = new String[] {
+                "Non dimenticare...", "Domani scuola"};
+        String[] texts = new String[]{
                 "È necessario che ci parliamo di persona, per mail rischiamo sempre fraintendimenti",
                 "Ricordati di comprare il latte tornando a casa",
                 "L'appuntamento è per domani alle 9, ci vediamo al solito posto",
                 "Ho sempre pensato valesse 42, tu sai di cosa parlo"
         };
         Random r = new Random();
-        for (int i=0; i<n; i++) {
+        for (int i = 0; i < n; i++) {
             Email email = new Email(
                     people[r.nextInt(people.length)],
                     List.of(people[r.nextInt(people.length)]),

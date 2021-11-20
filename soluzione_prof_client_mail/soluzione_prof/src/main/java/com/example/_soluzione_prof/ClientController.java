@@ -60,8 +60,11 @@ public class ClientController {
      */
     @FXML
     protected void onDeleteButtonClick() {
-        model.deleteEmail(selectedEmail);
-        updateDetailView(emptyEmail);
+        model.deleteEmail(selectedEmail);       // se non ci fosse nella parte di sinistra rimarrebbe la mail, mentre invece
+                                                // a schermo (parte destra) si cancella tutto. Se si riclicca a sinistra (dopo
+                                                // averla eliminata) ricompare il testo a destra.
+        updateDetailView(emptyEmail);           // se non ci fosse nella parte di destra rimarrebbe la mail a schermo anche
+                                                // dopo averla eliminata.
     }
 
      /**
