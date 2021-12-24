@@ -1,2 +1,0 @@
-# Programazzione_III
-

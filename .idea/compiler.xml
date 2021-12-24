@@ -6,11 +6,10 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="_soluzione_prof" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="_soluzione_prof" target="14" />
+      <module name="_Ese_provs_FXML" target="14" />
     </bytecodeTargetLevel>
   </component>
 </project>
