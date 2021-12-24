@@ -1,4 +1,4 @@
-package com.p3mail.application;
+package com.p3mail.application.model;
 
 import java.util.ArrayList;
 import java.util.List;

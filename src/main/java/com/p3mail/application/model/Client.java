@@ -1,4 +1,4 @@
-package com.p3mail.application;
+package com.p3mail.application.model;
 
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;

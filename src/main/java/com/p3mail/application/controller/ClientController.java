@@ -1,7 +1,7 @@
-package com.p3mail.application;
+package com.p3mail.application.controller;
 
-import com.p3mail.application.Client;
-import com.p3mail.application.Email;
+import com.p3mail.application.model.Client;
+import com.p3mail.application.model.Email;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
