@@ -1,0 +1,7 @@
+com\p3mail\application\HelloApplication.class
+com\p3mail\application\controller\ClientController.class
+com\p3mail\application\main\EmailClientMain.class
+com\p3mail\application\model\Client.class
+module-info.class
+com\p3mail\application\model\Email.class
+com\p3mail\application\HelloController.class
