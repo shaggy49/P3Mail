@@ -7,7 +7,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class EmailClientMain extends Application {
+public class ClientMain extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {

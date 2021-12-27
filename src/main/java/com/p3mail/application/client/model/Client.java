@@ -16,9 +16,11 @@ import java.util.Random;
  */
 
 public class Client {
+    private final StringProperty name;
+    private final StringProperty surname;
+    private final StringProperty emailAddress;
     private final ListProperty<Email> inbox;
     private final ObservableList<Email> inboxContent;
-    private final StringProperty emailAddress;
 
     /**
      * Costruttore della classe.
@@ -27,11 +29,13 @@ public class Client {
      *
      */
 
-    public Client(String emailAddress) {
+    public Client(String name, String surname, String emailAddress) {
+        this.name = new SimpleStringProperty(name);
+        this.surname = new SimpleStringProperty(surname);
+        this.emailAddress = new SimpleStringProperty(emailAddress);
         this.inboxContent = FXCollections.observableList(new LinkedList<>());
         this.inbox = new SimpleListProperty<>();
         this.inbox.set(inboxContent);
-        this.emailAddress = new SimpleStringProperty(emailAddress);
     }
 
     /**
@@ -40,6 +44,14 @@ public class Client {
      */
     public ListProperty<Email> inboxProperty() {
         return inbox;
+    }
+
+    public StringProperty nameProperty() {
+        return name;
+    }
+
+    public StringProperty surnameProperty() {
+        return surname;
     }
 
     /**
@@ -61,11 +73,11 @@ public class Client {
     }
 
     /**
-     *genera email random da aggiungere alla lista di email, ese verranno mostrate nella ui
+     *genera email random da aggiungere alla lista di email, esse verranno mostrate nella ui
      */
     public void generateRandomEmails(int n) {
         String[] people = new String[] {"Paolo", "Alessandro", "Enrico", "Giulia", "Gaia", "Simone"};
-        String[] subjects = new String[] {
+        String[] objects = new String[] {
                 "Importante", "A proposito della nostra ultima conversazione", "Tanto va la gatta al lardo",
                 "Non dimenticare...", "Domani scuola" };
         String[] texts = new String[] {
@@ -79,10 +91,17 @@ public class Client {
             Email email = new Email(
                     people[r.nextInt(people.length)],
                     List.of(people[r.nextInt(people.length)]),
-                    subjects[r.nextInt(subjects.length)],
+                    objects[r.nextInt(objects.length)],
                     texts[r.nextInt(texts.length)]);
             inboxContent.add(email);
         }
+    }
+
+    /**
+     * @return for now it just duplicate the selected email
+     */
+    public void addEmail(Email selectedEmail) {
+        inboxContent.add(selectedEmail);
     }
 }
 

@@ -3,6 +3,7 @@ package com.p3mail.application.client.controller;
 import com.p3mail.application.client.model.Client;
 import com.p3mail.application.client.model.Email;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
@@ -22,16 +23,22 @@ public class ClientController {
     private Label lblTo;
 
     @FXML
-    private Label lblSubject;
+    private Label lblObject;
 
     @FXML
-    private Label lblUsername;
+    private Label lblEmailAddress;
 
     @FXML
     private TextArea txtEmailContent;
 
     @FXML
     private ListView<Email> lstEmails;
+
+    @FXML
+    public Button addEmailButton;
+
+    @FXML
+    public Button deleteEmailButton;
 
     private Client model;
     private Email selectedEmail;
@@ -42,18 +49,26 @@ public class ClientController {
         if (this.model != null)
             throw new IllegalStateException("Model can only be initialized once");
         //istanza nuovo client
-        model = new Client("studente@unito.it");
+        model = new Client("Luigi", "Rossi","luigirossi@unito.it");
         model.generateRandomEmails(10);
 
         selectedEmail = null;
 
         //binding tra lstEmails e inboxProperty
         lstEmails.itemsProperty().bind(model.inboxProperty());
-        lstEmails.setOnMouseClicked(this::showSelectedEmail);
-        lblUsername.textProperty().bind(model.emailAddressProperty());
+        lblEmailAddress.textProperty().bind(model.emailAddressProperty());
 
         emptyEmail = new Email("", List.of(""), "", "");
 
+        updateDetailView(emptyEmail);
+    }
+
+    /**
+     * Aggiunge una mail alla lista
+     */
+    @FXML
+    protected void onAddButtonClick() {
+        model.addEmail(selectedEmail);
         updateDetailView(emptyEmail);
     }
 
@@ -69,11 +84,14 @@ public class ClientController {
      /**
      * Mostra la mail selezionata nella vista
      */
-    protected void showSelectedEmail(MouseEvent mouseEvent) {
+     @FXML
+    protected void showSelectedEmail(MouseEvent mouseClick) {
         Email email = lstEmails.getSelectionModel().getSelectedItem();
 
         selectedEmail = email;
-        updateDetailView(email);
+
+        if(mouseClick.getClickCount() == 2)
+            updateDetailView(email);
     }
 
      /**
@@ -83,7 +101,7 @@ public class ClientController {
         if(email != null) {
             lblFrom.setText(email.getSender());
             lblTo.setText(String.join(", ", email.getReceivers()));
-            lblSubject.setText(email.getObject());
+            lblObject.setText(email.getObject());
             txtEmailContent.setText(email.getText());
         }
     }

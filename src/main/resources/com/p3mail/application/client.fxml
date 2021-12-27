@@ -5,7 +5,7 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="543.0" prefWidth="722.0" xmlns:fx="http://javafx.com/fxml" fx:controller="com.p3mail.application.client.controller.ClientController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="543.0" prefWidth="722.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.p3mail.application.client.controller.ClientController">
    <center>
       <SplitPane dividerPositions="0.36785119378123265" prefHeight="638.0" prefWidth="595.0" BorderPane.alignment="CENTER">
          <items>
@@ -18,7 +18,7 @@
                               <Image url="@images/account_icon.png" />
                            </image>
                         </ImageView>
-                        <Label fx:id="lblUsername" prefHeight="54.0" prefWidth="215.0" text="Label">
+                        <Label fx:id="lblEmailAddress" prefHeight="50.0" prefWidth="120.0" text="Label">
                            <HBox.margin>
                               <Insets left="20.0" />
                            </HBox.margin>
@@ -30,7 +30,7 @@
                   </HBox>
                </top>
                <center>
-                  <ListView fx:id="lstEmails" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+                  <ListView fx:id="lstEmails" onMouseClicked="#showSelectedEmail" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
                </center>
             </BorderPane>
             <StackPane prefHeight="150.0" prefWidth="200.0">
@@ -53,7 +53,7 @@
                               <Label text="Oggetto:" GridPane.rowIndex="2" />
                               <Label fx:id="lblFrom" text="Label" GridPane.columnIndex="1" />
                               <Label fx:id="lblTo" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <Label fx:id="lblSubject" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <Label fx:id="lblObject" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                            </children>
                            <padding>
                               <Insets left="12.0" right="12.0" />
@@ -64,7 +64,18 @@
                         <TextArea fx:id="txtEmailContent" editable="false" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
                      </center>
                      <bottom>
-                        <Button fx:id="btnDelete" mnemonicParsing="false" onMouseClicked="#onDeleteButtonClick" text="Elimina" BorderPane.alignment="CENTER" />
+                        <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                           <children>
+                              <Button fx:id="addEmailButton" mnemonicParsing="false" onMouseClicked="#onAddButtonClick" text="Add">
+                                 <HBox.margin>
+                                    <Insets left="120.0" />
+                                 </HBox.margin></Button>
+                              <Button fx:id="deleteEmailButton" mnemonicParsing="false" onMouseClicked="#onDeleteButtonClick" text="Delete">
+                                 <HBox.margin>
+                                    <Insets left="120.0" />
+                                 </HBox.margin></Button>
+                           </children>
+                        </HBox>
                      </bottom>
                   </BorderPane>
                </children>

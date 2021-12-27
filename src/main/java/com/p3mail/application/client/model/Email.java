@@ -30,10 +30,16 @@ public class Email {
 
 
     public Email(String sender, List<String> receivers, String object, String text) {
+        this.id++;
         this.sender = sender;
         this.object = object;
         this.text = text;
         this.receivers = new ArrayList<>(receivers);
+        this.date = new Date();
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getSender() {
@@ -50,6 +56,10 @@ public class Email {
 
     public String getText() {
         return text;
+    }
+
+    public Date getDate() {
+        return date;
     }
 
     /**
