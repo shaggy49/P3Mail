@@ -1,7 +1,7 @@
-package com.p3mail.application.controller;
+package com.p3mail.application.client.controller;
 
-import com.p3mail.application.model.Client;
-import com.p3mail.application.model.Email;
+import com.p3mail.application.client.model.Client;
+import com.p3mail.application.client.model.Email;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -83,7 +83,7 @@ public class ClientController {
         if(email != null) {
             lblFrom.setText(email.getSender());
             lblTo.setText(String.join(", ", email.getReceivers()));
-            lblSubject.setText(email.getSubject());
+            lblSubject.setText(email.getObject());
             txtEmailContent.setText(email.getText());
         }
     }

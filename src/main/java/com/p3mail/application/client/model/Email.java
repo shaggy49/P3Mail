@@ -1,6 +1,7 @@
-package com.p3mail.application.model;
+package com.p3mail.application.client.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -9,10 +10,12 @@ import java.util.List;
 
 public class Email {
 
+    private int id;
     private String sender;
     private List<String> receivers;
-    private String subject;
+    private String object;
     private String text;
+    private Date date;
 
     private Email() {}
 
@@ -21,14 +24,14 @@ public class Email {
      *
      * @param sender     email del mittente
      * @param receivers  emails dei destinatari
-     * @param subject    oggetto della mail
+     * @param object    oggetto della mail
      * @param text       testo della mail
      */
 
 
-    public Email(String sender, List<String> receivers, String subject, String text) {
+    public Email(String sender, List<String> receivers, String object, String text) {
         this.sender = sender;
-        this.subject = subject;
+        this.object = object;
         this.text = text;
         this.receivers = new ArrayList<>(receivers);
     }
@@ -41,8 +44,8 @@ public class Email {
         return receivers;
     }
 
-    public String getSubject() {
-        return subject;
+    public String getObject() {
+        return object;
     }
 
     public String getText() {
@@ -54,6 +57,6 @@ public class Email {
      */
     @Override
     public String toString() {
-        return String.join(" - ", List.of(this.sender,this.subject));
+        return String.join(" - ", List.of(this.sender,this.object));
     }
 }
