@@ -236,5 +236,3 @@ buildNumber.properties
 !.vscode/*.code-snippets
 
 src/main/webapp/WEB-INF/web.xml
-
-target/

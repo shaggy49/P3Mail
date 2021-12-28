@@ -10,7 +10,7 @@ import java.util.List;
 
 public class Email {
 
-    private int id;
+    private static int id;
     private String sender;
     private List<String> receivers;
     private String object;
@@ -29,8 +29,11 @@ public class Email {
      */
 
 
+    /*
+        Da aggiungere il controllo che il sender abbia una @ seguita da un .
+     */
     public Email(String sender, List<String> receivers, String object, String text) {
-        this.id++;
+        id++;
         this.sender = sender;
         this.object = object;
         this.text = text;
