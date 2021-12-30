@@ -3,24 +3,26 @@ package com.p3mail.application.server.testing;
 import com.p3mail.application.client.model.Email;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 
+/*
+* classe che permette di leggere il contenuto dei file email nella cartella server
+* */
 public class TestObjectInputStream {
     public static void main(String[] args) {
         try {
-            String path = "." + File.separator + "server" + File.separator + "emailProva.dat";
-            File file = new File(path);
-            FileInputStream fos = new FileInputStream(file);
-            ObjectInputStream inputStream = new ObjectInputStream(fos);
+            for (int i = 1; i <= 10; i++) {
+                String path = String.format("." + File.separator + "server" + File.separator + "email_%d.dat", i);
+                File file = new File(path);
+                FileInputStream fos = new FileInputStream(file);
+                ObjectInputStream inputStream = new ObjectInputStream(fos);
 
-            Email email = (Email) inputStream.readObject();
+                Email email = (Email) inputStream.readObject();
 
-            System.out.println(email.classictoString());
+                System.out.println(email.classictoString());
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+            }
+
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }

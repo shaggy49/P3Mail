@@ -10,16 +10,13 @@ import javafx.scene.input.MouseEvent;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.List;
-import java.util.Scanner;
 
 /**
  * Classe Controller 
  */
 
 public class ClientController {
-    //connessione col mailServer, inizialmente il client risulta non connesso
     Socket s = null;
 
     @FXML
@@ -33,9 +30,6 @@ public class ClientController {
 
     @FXML
     private Label lblEmailAddress;
-
-    @FXML
-    public Button connectButton;
 
     @FXML
     private TextArea txtEmailContent;
@@ -59,7 +53,6 @@ public class ClientController {
             throw new IllegalStateException("Model can only be initialized once");
         //istanza nuovo client
         model = new Client("Federico", "Ferreri", "ff@unito.it");
-        model.generateRandomEmails(10);
 
         selectedEmail = null;
 
@@ -67,9 +60,57 @@ public class ClientController {
         lstEmails.itemsProperty().bind(model.inboxProperty());
         lblEmailAddress.textProperty().bind(model.emailAddressProperty());
 
+        try {
+            connectWithServer();
+            Alert mailSuccessAlert = new Alert(Alert.AlertType.INFORMATION);
+            mailSuccessAlert.setTitle("Success");
+            mailSuccessAlert.setHeaderText("You entered a valid mail address!");
+            mailSuccessAlert.show();
+        } catch (MailNotFoundException e) {
+            Alert mailErrorAlert = new Alert(Alert.AlertType.ERROR);
+            mailErrorAlert.setTitle("Error");
+            mailErrorAlert.setHeaderText(e.getMessage());
+            mailErrorAlert.show();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Connection failed");
+            alert.show();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
         emptyEmail = new Email("", List.of(""), "", "");
 
         updateDetailView(emptyEmail);
+    }
+
+    public void connectWithServer() throws MailNotFoundException, IOException, ClassNotFoundException {
+        String nomeHost = InetAddress.getLocalHost().getHostName();
+        System.out.println(nomeHost);
+        s = new Socket(nomeHost, 8189);
+        System.out.println("Connection established!");
+        InputStream inStream = s.getInputStream();
+        OutputStream outStream = s.getOutputStream();
+//            Scanner in = new Scanner(inStream);
+        ObjectInputStream in = new ObjectInputStream(inStream);
+        PrintWriter out = new PrintWriter(outStream, true);
+        out.println(model.emailAddressProperty().get());
+        System.out.println("Ho spedito il messaggio al socket");
+
+        Object serverResponse = in.readObject();
+        if(serverResponse instanceof MailNotFoundException){
+            throw new MailNotFoundException();
+        }
+        else {
+            List<Email> userEMail = (List<Email>) serverResponse;
+            for (Email email : userEMail) {
+                model.addEmail(email);
+            }
+        }
+        s.close();
     }
 
     /**
@@ -115,61 +156,4 @@ public class ClientController {
         }
     }
 
-    @FXML
-    public void tryConnection(MouseEvent mouseClick) {
-        try {
-            String nomeHost = InetAddress.getLocalHost().getHostName();
-            System.out.println(nomeHost);
-            s = new Socket(nomeHost, 8189);
-            System.out.println("Connection established!");
-            InputStream inStream = s.getInputStream();
-            OutputStream outStream = s.getOutputStream();
-//            Scanner in = new Scanner(inStream);
-            ObjectInputStream in = new ObjectInputStream(inStream);
-            PrintWriter out = new PrintWriter(outStream, true);
-            out.println(model.emailAddressProperty().get());
-            System.out.println("Ho spedito il messaggio al socket");
-
-            Object serverResponse = in.readObject();
-            if(serverResponse instanceof MailNotFoundException mailNotFoundException){
-                Alert mailErrorAlert = new Alert(Alert.AlertType.ERROR);
-                mailErrorAlert.setTitle("Error");
-                mailErrorAlert.setHeaderText(mailNotFoundException.getMessage());
-                mailErrorAlert.show();
-            }
-            else {
-                Alert mailSuccessAlert = new Alert(Alert.AlertType.INFORMATION);
-                mailSuccessAlert.setTitle("Success");
-                mailSuccessAlert.setHeaderText("You entered a valid mail address!");
-                mailSuccessAlert.show();
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("Connection failed");
-            alert.show();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    public void tryDisconnect(MouseEvent mouseClick) {
-        try {
-            s.close();
-            s = null;
-            Alert disconnectSuccess = new Alert(Alert.AlertType.INFORMATION);
-            disconnectSuccess.setTitle("Success");
-            disconnectSuccess.setHeaderText("You disconnected!");
-            disconnectSuccess.show();
-        } catch (IOException | NullPointerException e ) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("Disconnection failed");
-            alert.show();
-            e.printStackTrace();
-        }
-    }
 }
