@@ -13,13 +13,13 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Note per quando si sviluppa l'interfaccia grafica del server:
- * il file main che eseguito crea la finestra grafica deve essere posto nel package piu' "alto"
+ * il file main che una volta eseguito crea la finestra grafica deve essere posto nel package piu' "alto"
  * allo stesso livello dei package 'client' e 'server', pena il mancato funzionamento di javafx.
  */
 public class ThreadedEchoServer {
     public static void main(String[] args) {
         System.out.println("Finestra del server: ");
-        HandleSocketsConnections handleSocketsConnections = new HandleSocketsConnections("handle1");
+        HandleSocketsConnections handleSocketsConnections = new HandleSocketsConnections("handleConnections");
         handleSocketsConnections.start();
         Scanner keyboard = new Scanner(System.in);
         while (!keyboard.nextLine().trim().equalsIgnoreCase("quit")) ;
@@ -40,6 +40,8 @@ class HandleSocketsConnections extends Thread {
             int i = 1;
             ServerSocket s = new ServerSocket(8189); //trova il socket in rete
             ExecutorService exec = Executors.newFixedThreadPool(N_THREADS);
+
+            //dove va messo lo shutdown dell'executorService?
 
             while (true) {
                 Socket incoming = s.accept(); // si mette in attesa di richiesta di connessione e la apre

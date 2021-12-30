@@ -7,6 +7,7 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -15,7 +16,7 @@ import java.util.Random;
  * Classe Client, conterrà la lista di mail che sarà il model
  */
 
-public class Client {
+public class Client implements Serializable {
     private final StringProperty name;
     private final StringProperty surname;
     private final StringProperty emailAddress;

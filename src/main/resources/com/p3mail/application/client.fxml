@@ -23,6 +23,13 @@
                               <Insets left="20.0" />
                            </HBox.margin>
                         </Label>
+                        <Button fx:id="connectButton" onMouseClicked="#tryConnection" mnemonicParsing="false" text="Connect">
+                           <HBox.margin>
+                              <Insets bottom="5.0" top="15.0" />
+                           </HBox.margin>
+                           <padding>
+                              <Insets right="5.0" />
+                           </padding></Button>
                      </children>
                      <padding>
                         <Insets bottom="12.0" left="12.0" right="12.0" top="12.0" />
