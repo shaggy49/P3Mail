@@ -1,5 +1,6 @@
 package com.p3mail.application.client.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.List;
  * Rappresenta una mail
  */
 
-public class Email {
+public class Email implements Serializable {
 
     private static int id;
     private String sender;
@@ -71,5 +72,15 @@ public class Email {
     @Override
     public String toString() {
         return String.join(" - ", List.of(this.sender,this.object));
+    }
+
+    public String classictoString() {
+        return "Email{" +
+                "sender='" + sender + '\'' +
+                ", receivers=" + receivers +
+                ", object='" + object + '\'' +
+                ", text='" + text + '\'' +
+                ", date=" + date +
+                '}';
     }
 }

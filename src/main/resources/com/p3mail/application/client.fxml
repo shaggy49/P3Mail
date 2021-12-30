@@ -18,18 +18,11 @@
                               <Image url="@images/account_icon.png" />
                            </image>
                         </ImageView>
-                        <Label fx:id="lblEmailAddress" prefHeight="50.0" prefWidth="120.0" text="Label">
+                        <Label fx:id="lblEmailAddress" prefHeight="65.0" prefWidth="84.0" text="Label">
                            <HBox.margin>
                               <Insets left="20.0" />
                            </HBox.margin>
                         </Label>
-                        <Button fx:id="connectButton" onMouseClicked="#tryConnection" mnemonicParsing="false" text="Connect">
-                           <HBox.margin>
-                              <Insets bottom="5.0" top="15.0" />
-                           </HBox.margin>
-                           <padding>
-                              <Insets right="5.0" />
-                           </padding></Button>
                      </children>
                      <padding>
                         <Insets bottom="12.0" left="12.0" right="12.0" top="12.0" />
@@ -75,12 +68,22 @@
                            <children>
                               <Button fx:id="addEmailButton" mnemonicParsing="false" onMouseClicked="#onAddButtonClick" text="Add">
                                  <HBox.margin>
-                                    <Insets left="120.0" />
+                                    <Insets left="80.0" />
                                  </HBox.margin></Button>
                               <Button fx:id="deleteEmailButton" mnemonicParsing="false" onMouseClicked="#onDeleteButtonClick" text="Delete">
                                  <HBox.margin>
-                                    <Insets left="120.0" />
+                                    <Insets left="20.0" />
                                  </HBox.margin></Button>
+                              <Button fx:id="connectButton" mnemonicParsing="false" onMouseClicked="#tryConnection" prefHeight="23.0" prefWidth="64.0" text="Connect">
+                                 <HBox.margin>
+                                    <Insets left="20.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Button fx:id="disconnectButton" mnemonicParsing="false" onMouseClicked="#tryDisconnect" prefHeight="25.0" prefWidth="83.0" text="Disconnect">
+                                 <HBox.margin>
+                                    <Insets left="20.0" />
+                                 </HBox.margin>
+                              </Button>
                            </children>
                         </HBox>
                      </bottom>

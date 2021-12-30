@@ -65,9 +65,14 @@ public class Client implements Serializable {
     }
 
     /**
-     *
-     * @return   elimina l'email specificata   
-     *
+     * @return aggiunge la mail specificata
+     */
+    public void addEmail(Email selectedEmail) {
+        inboxContent.add(selectedEmail);
+    }
+
+    /**
+     * @return   elimina l'email specificata
      */
     public void deleteEmail(Email email) {
         inboxContent.remove(email);
@@ -96,13 +101,6 @@ public class Client implements Serializable {
                     texts[r.nextInt(texts.length)]);
             inboxContent.add(email);
         }
-    }
-
-    /**
-     * @return for now it just duplicate the selected email
-     */
-    public void addEmail(Email selectedEmail) {
-        inboxContent.add(selectedEmail);
     }
 }
 

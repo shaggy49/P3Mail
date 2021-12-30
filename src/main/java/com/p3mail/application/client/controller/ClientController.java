@@ -19,6 +19,9 @@ import java.util.Scanner;
  */
 
 public class ClientController {
+    //connessione col mailServer, inizialmente il client risulta non connesso
+    Socket s = null;
+
     @FXML
     private Label lblFrom;
 
@@ -114,7 +117,6 @@ public class ClientController {
 
     @FXML
     public void tryConnection(MouseEvent mouseClick) {
-        Socket s = null;
         try {
             String nomeHost = InetAddress.getLocalHost().getHostName();
             System.out.println(nomeHost);
@@ -150,14 +152,24 @@ public class ClientController {
             alert.show();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-        } finally {
-            if(s != null) {
-                try {
-                    s.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+        }
+    }
+
+
+    public void tryDisconnect(MouseEvent mouseClick) {
+        try {
+            s.close();
+            s = null;
+            Alert disconnectSuccess = new Alert(Alert.AlertType.INFORMATION);
+            disconnectSuccess.setTitle("Success");
+            disconnectSuccess.setHeaderText("You disconnected!");
+            disconnectSuccess.show();
+        } catch (IOException | NullPointerException e ) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Disconnection failed");
+            alert.show();
+            e.printStackTrace();
         }
     }
 }
