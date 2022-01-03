@@ -7,6 +7,7 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -64,44 +65,18 @@ public class Client {
     }
 
     /**
-     *
-     * @return   elimina l'email specificata   
-     *
+     * @return aggiunge la mail specificata
+     */
+    public void addEmail(Email selectedEmail) {
+        inboxContent.add(selectedEmail);
+    }
+
+    /**
+     * @return   elimina l'email specificata
      */
     public void deleteEmail(Email email) {
         inboxContent.remove(email);
     }
 
-    /**
-     *genera email random da aggiungere alla lista di email, esse verranno mostrate nella ui
-     */
-    public void generateRandomEmails(int n) {
-        String[] people = new String[] {"Paolo", "Alessandro", "Enrico", "Giulia", "Gaia", "Simone"};
-        String[] objects = new String[] {
-                "Importante", "A proposito della nostra ultima conversazione", "Tanto va la gatta al lardo",
-                "Non dimenticare...", "Domani scuola" };
-        String[] texts = new String[] {
-                "È necessario che ci parliamo di persona, per mail rischiamo sempre fraintendimenti",
-                "Ricordati di comprare il latte tornando a casa",
-                "L'appuntamento è per domani alle 9, ci vediamo al solito posto",
-                "Ho sempre pensato valesse 42, tu sai di cosa parlo"
-        };
-        Random r = new Random();
-        for (int i=0; i<n; i++) {
-            Email email = new Email(
-                    people[r.nextInt(people.length)],
-                    List.of(people[r.nextInt(people.length)]),
-                    objects[r.nextInt(objects.length)],
-                    texts[r.nextInt(texts.length)]);
-            inboxContent.add(email);
-        }
-    }
-
-    /**
-     * @return for now it just duplicate the selected email
-     */
-    public void addEmail(Email selectedEmail) {
-        inboxContent.add(selectedEmail);
-    }
 }
 

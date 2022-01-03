@@ -6,81 +6,81 @@
 <?import javafx.scene.layout.*?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="543.0" prefWidth="722.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.p3mail.application.client.controller.ClientController">
-   <center>
-      <SplitPane dividerPositions="0.36785119378123265" prefHeight="638.0" prefWidth="595.0" BorderPane.alignment="CENTER">
-         <items>
-            <BorderPane fx:id="pnlEmailList" prefHeight="200.0" prefWidth="200.0">
-               <top>
-                  <HBox prefHeight="54.0" prefWidth="262.0" BorderPane.alignment="CENTER">
-                     <children>
-                        <ImageView fx:id="imgIcon" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@images/account_icon.png" />
-                           </image>
-                        </ImageView>
-                        <Label fx:id="lblEmailAddress" prefHeight="50.0" prefWidth="120.0" text="Label">
-                           <HBox.margin>
-                              <Insets left="20.0" />
-                           </HBox.margin>
-                        </Label>
-                     </children>
-                     <padding>
-                        <Insets bottom="12.0" left="12.0" right="12.0" top="12.0" />
-                     </padding>
-                  </HBox>
-               </top>
-               <center>
-                  <ListView fx:id="lstEmails" onMouseClicked="#showSelectedEmail" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
-               </center>
-            </BorderPane>
-            <StackPane prefHeight="150.0" prefWidth="200.0">
-               <children>
-                  <BorderPane fx:id="pnlReadMessage" prefHeight="200.0" prefWidth="200.0">
-                     <top>
-                        <GridPane BorderPane.alignment="CENTER">
-                          <columnConstraints>
-                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="221.2000732421875" minWidth="10.0" prefWidth="90.4000244140625" />
-                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="389.199951171875" minWidth="10.0" prefWidth="362.3999755859375" />
-                          </columnConstraints>
-                          <rowConstraints>
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                          </rowConstraints>
-                           <children>
-                              <Label text="Da:" />
-                              <Label text="A:" GridPane.rowIndex="1" />
-                              <Label text="Oggetto:" GridPane.rowIndex="2" />
-                              <Label fx:id="lblFrom" text="Label" GridPane.columnIndex="1" />
-                              <Label fx:id="lblTo" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <Label fx:id="lblObject" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                           </children>
-                           <padding>
-                              <Insets left="12.0" right="12.0" />
-                           </padding>
-                        </GridPane>
-                     </top>
-                     <center>
-                        <TextArea fx:id="txtEmailContent" editable="false" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
-                     </center>
-                     <bottom>
-                        <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-                           <children>
-                              <Button fx:id="addEmailButton" mnemonicParsing="false" onMouseClicked="#onAddButtonClick" text="Add">
-                                 <HBox.margin>
-                                    <Insets left="120.0" />
-                                 </HBox.margin></Button>
-                              <Button fx:id="deleteEmailButton" mnemonicParsing="false" onMouseClicked="#onDeleteButtonClick" text="Delete">
-                                 <HBox.margin>
-                                    <Insets left="120.0" />
-                                 </HBox.margin></Button>
-                           </children>
-                        </HBox>
-                     </bottom>
-                  </BorderPane>
-               </children>
-            </StackPane>
-         </items>
-      </SplitPane>
-   </center>
+	<center>
+		<SplitPane dividerPositions="0.36785119378123265" prefHeight="638.0" prefWidth="595.0" BorderPane.alignment="CENTER">
+			<items>
+				<BorderPane fx:id="pnlEmailList" prefHeight="200.0" prefWidth="200.0">
+					<top>
+						<HBox prefHeight="54.0" prefWidth="262.0" BorderPane.alignment="CENTER">
+							<children>
+								<ImageView fx:id="imgIcon" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+									<image>
+										<Image url="@images/account_icon.png" />
+									</image>
+								</ImageView>
+								<Label fx:id="lblEmailAddress" prefHeight="65.0" prefWidth="84.0" text="Label">
+									<HBox.margin>
+										<Insets left="20.0" />
+									</HBox.margin>
+								</Label>
+							</children>
+							<padding>
+								<Insets bottom="12.0" left="12.0" right="12.0" top="12.0" />
+							</padding>
+						</HBox>
+					</top>
+					<center>
+						<ListView fx:id="lstEmails" onMouseClicked="#showSelectedEmail" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+					</center>
+				</BorderPane>
+				<StackPane prefHeight="150.0" prefWidth="200.0">
+					<children>
+						<BorderPane fx:id="pnlReadMessage" prefHeight="200.0" prefWidth="200.0">
+							<top>
+								<GridPane BorderPane.alignment="CENTER">
+									<columnConstraints>
+										<ColumnConstraints hgrow="SOMETIMES" maxWidth="221.2000732421875" minWidth="10.0" prefWidth="90.4000244140625" />
+										<ColumnConstraints hgrow="SOMETIMES" maxWidth="389.199951171875" minWidth="10.0" prefWidth="362.3999755859375" />
+									</columnConstraints>
+									<rowConstraints>
+										<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+										<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+										<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+									</rowConstraints>
+									<children>
+										<Label text="Da:" />
+										<Label text="A:" GridPane.rowIndex="1" />
+										<Label text="Oggetto:" GridPane.rowIndex="2" />
+										<Label fx:id="lblFrom" text="Label" GridPane.columnIndex="1" />
+										<Label fx:id="lblTo" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+										<Label fx:id="lblObject" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+									</children>
+									<padding>
+										<Insets left="12.0" right="12.0" />
+									</padding>
+								</GridPane>
+							</top>
+							<center>
+								<TextArea fx:id="txtEmailContent" editable="false" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+							</center>
+							<bottom>
+								<HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+									<children>
+										<Button fx:id="addEmailButton" mnemonicParsing="false" onMouseClicked="#onAddButtonClick" text="Add">
+											<HBox.margin>
+												<Insets left="120.0" />
+											</HBox.margin></Button>
+										<Button fx:id="deleteEmailButton" mnemonicParsing="false" onMouseClicked="#onDeleteButtonClick" text="Delete">
+											<HBox.margin>
+												<Insets left="100.0" />
+											</HBox.margin></Button>
+									</children>
+								</HBox>
+							</bottom>
+						</BorderPane>
+					</children>
+				</StackPane>
+			</items>
+		</SplitPane>
+	</center>
 </BorderPane>

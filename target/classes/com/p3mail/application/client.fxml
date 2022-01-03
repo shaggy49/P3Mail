@@ -18,7 +18,7 @@
                               <Image url="@images/account_icon.png" />
                            </image>
                         </ImageView>
-                        <Label fx:id="lblEmailAddress" prefHeight="50.0" prefWidth="120.0" text="Label">
+                        <Label fx:id="lblEmailAddress" prefHeight="65.0" prefWidth="84.0" text="Label">
                            <HBox.margin>
                               <Insets left="20.0" />
                            </HBox.margin>
@@ -72,7 +72,7 @@
                                  </HBox.margin></Button>
                               <Button fx:id="deleteEmailButton" mnemonicParsing="false" onMouseClicked="#onDeleteButtonClick" text="Delete">
                                  <HBox.margin>
-                                    <Insets left="120.0" />
+                                    <Insets left="100.0" />
                                  </HBox.margin></Button>
                            </children>
                         </HBox>
