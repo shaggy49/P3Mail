@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -27,39 +26,27 @@
 						<Font name="Arial Bold" size="18.0" />
 					</font>
 				</Label>
-				<CheckBox mnemonicParsing="false" prefHeight="18.0" prefWidth="165.0" text="pippoabaudo@unito.it" textFill="WHITE">
-					<VBox.margin>
-						<Insets bottom="4.0" />
-					</VBox.margin>
-					<font>
-						<Font name="Arial" size="13.0" />
-					</font>
-				</CheckBox>
-				<CheckBox mnemonicParsing="false" prefHeight="18.0" prefWidth="165.0" text="marco.polo@unito.com" textFill="WHITE">
-					<VBox.margin>
-						<Insets bottom="4.0" />
-					</VBox.margin>
-					<font>
-						<Font name="Arial" size="13.0" />
-					</font>
-				</CheckBox>
-				<CheckBox mnemonicParsing="false" prefHeight="18.0" prefWidth="166.0" text="palla.canestro@unito.it" textFill="WHITE">
-					<font>
-						<Font name="Arial" size="13.0" />
-					</font></CheckBox>
-				<Button alignment="CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="134.0" style="-fx-background-color: #06BF9D#06BF9D #06BF9D#06BF9D; -fx-background-radius: 20px;" text="Accedi" textFill="WHITE">
-					<VBox.margin>
-						<Insets bottom="5.0" top="30.0" />
-					</VBox.margin>
-					<font>
-						<Font name="Arial Bold" size="13.0" />
-					</font>
-				</Button>
-				<Button alignment="CENTER" layoutX="47.0" layoutY="176.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="134.0" style="-fx-background-radius: 20px; -fx-background-color: white;" text="Cancel" textFill="#06bf9d">
-					<font>
-						<Font name="Arial Bold" size="13.0" />
-					</font>
-				</Button>
+            <RadioButton mnemonicParsing="false" text="ff.unito.it" textFill="WHITE">
+               <font>
+                  <Font name="Arial" size="13.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="4.0" right="10.0" />
+               </VBox.margin>
+            </RadioButton>
+            <RadioButton mnemonicParsing="false" text="af.unito.it" textFill="WHITE">
+               <font>
+                  <Font name="Arial" size="13.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="4.0" right="6.0" />
+               </VBox.margin>
+            </RadioButton>
+            <RadioButton layoutX="78.0" layoutY="225.0" mnemonicParsing="false" text="mc.unito.it" textFill="WHITE">
+               <font>
+                  <Font name="Arial" size="13.0" />
+               </font>
+            </RadioButton>
 			</children>
 		</VBox>
 	</children>
