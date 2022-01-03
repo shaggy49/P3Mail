@@ -57,7 +57,6 @@ public class ClientServerConnection implements Runnable {
                 System.out.printf("(%s): connessione chiusa\n", userEmail);
 
             } catch (MailNotFoundException e) {
-                e.printStackTrace();
                 System.out.println("Connessione rifiutata");
             }
         } catch (IOException e) {
@@ -72,16 +71,10 @@ public class ClientServerConnection implements Runnable {
     }
 
     public List<Email> getMailForClient(String emailAddress) {
-        /*
-        * TODO: reply with filtering emails for user taken in parameter
-        *  to do that you need to rewrite the email filename of each user
-        *  to be clear inside the server folder, put another folder named after
-        *  user email. Inside this folder there will be all the email files.
-        * */
         List<Email> emailList = new ArrayList<>();
         try {
-            for (int i = 1; i <= 10; i++) {
-                String path = String.format("." + File.separator + "server" + File.separator + "email_%d.dat", i);
+            for (int i = 0; i < 10; i++) {
+                String path = String.format("." + File.separator + "server" + File.separator + emailAddress +  File.separator + "email_%d.dat", i);
                 File file = new File(path);
                 FileInputStream fos = new FileInputStream(file);
                 ObjectInputStream inputStream = new ObjectInputStream(fos);
