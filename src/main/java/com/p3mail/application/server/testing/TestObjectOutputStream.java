@@ -1,6 +1,8 @@
 package com.p3mail.application.server.testing;
 
 import com.p3mail.application.client.model.Email;
+import com.p3mail.application.server.RegisteredClient;
+import com.p3mail.application.server.model.MailAccount;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -13,7 +15,6 @@ import java.util.Random;
 /*
 * classe che si occupa di creare la cartella server e metterci dentro i file con la mail
 * degli utenti
-* TODO: add specific folder for each registered user
 * */
 public class TestObjectOutputStream {
     public static void main(String[] args) {
@@ -29,25 +30,30 @@ public class TestObjectOutputStream {
                     "Ho sempre pensato valesse 42, tu sai di cosa parlo"
             };
 
-            for (int i = 0; i < 10; i++) {
-                Random r = new Random();
-                Email email = new Email(
-                        people[r.nextInt(people.length)],
-                        List.of(people[r.nextInt(people.length)]),
-                        objects[r.nextInt(objects.length)],
-                        texts[r.nextInt(texts.length)]);
+            List<String> registeredMailAccounts = new RegisteredClient().getRegisteredMails();
 
-                String path = String.format("." + File.separator + "server" + File.separator + "email_%d.dat", email.getId());
-                File file = new File(path);
-                file.getParentFile().mkdirs();
-                file.createNewFile();
-                FileOutputStream fos = new FileOutputStream(file);
-                ObjectOutputStream outputStream = new ObjectOutputStream(fos);
+            for (String account : registeredMailAccounts) {
+                for (int i = 0; i < 10; i++) {
+                    Random r = new Random();
+                    Email email = new Email(
+                            people[r.nextInt(people.length)],
+                            List.of(people[r.nextInt(people.length)]),
+                            objects[r.nextInt(objects.length)],
+                            texts[r.nextInt(texts.length)]);
 
-                outputStream.writeObject(email);
+                    String path = String.format("." + File.separator + "server" + File.separator + account + File.separator + "email_%d.dat", i);
+                    File file = new File(path);
+                    file.getParentFile().mkdirs();
+                    file.createNewFile();
+                    FileOutputStream fos = new FileOutputStream(file);
+                    ObjectOutputStream outputStream = new ObjectOutputStream(fos);
 
-                outputStream.close();
+                    outputStream.writeObject(email);
+
+                    outputStream.close();
+                }
             }
+
 
 
         } catch (IOException e) {
