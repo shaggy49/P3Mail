@@ -9,7 +9,7 @@
 	<content>
 		<AnchorPane minHeight="0.0" minWidth="0.0" style="-fx-background-color: #044a59;">
 			<children>
-				<Label alignment="TOP_LEFT" layoutX="6.0" layoutY="6.0" text="Server Loading..." textFill="#ffffff" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+				<Label alignment="TOP_LEFT" layoutX="2.0" layoutY="2.0" prefHeight="364.0" prefWidth="580.0" text="Server Loading..." textFill="#ffffff" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="17.0" AnchorPane.topAnchor="1.0">
 					<font>
 						<Font name="Arial Italic" size="16.0" />
 					</font>
@@ -17,6 +17,7 @@
                   <Insets />
                </opaqueInsets>
 				</Label>
+            <ScrollBar layoutX="578.0" orientation="VERTICAL" prefHeight="368.0" prefWidth="3.0" />
 			</children>
 			<padding>
 				<Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
