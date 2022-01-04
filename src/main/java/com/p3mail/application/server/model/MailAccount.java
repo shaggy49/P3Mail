@@ -1,6 +1,6 @@
 package com.p3mail.application.server.model;
 
-import com.p3mail.application.client.model.Email;
+import com.p3mail.application.connection.model.Email;
 
 import java.util.ArrayList;
 import java.util.List;

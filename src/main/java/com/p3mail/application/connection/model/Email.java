@@ -1,4 +1,4 @@
-package com.p3mail.application.client.model;
+package com.p3mail.application.connection.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import java.util.List;
 
 public class Email implements Serializable {
 
-    private static int id;
+    private int id;
     private String sender;
     private List<String> receivers;
     private String object;
@@ -33,8 +33,8 @@ public class Email implements Serializable {
     /*
         Da aggiungere il controllo che il sender abbia una @ seguita da un .
      */
-    public Email(String sender, List<String> receivers, String object, String text) {
-        id++;
+    public Email(int id, String sender, List<String> receivers, String object, String text) {
+        this.id = id;
         this.sender = sender;
         this.object = object;
         this.text = text;

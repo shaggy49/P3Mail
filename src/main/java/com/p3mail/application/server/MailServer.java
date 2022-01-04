@@ -11,8 +11,9 @@ public class MailServer {
 
     public static void main(String[] args) {
         System.out.println("Finestra del server: ");
+        ServerSocket s = null;
         try {
-            ServerSocket s = new ServerSocket(8189); //trova il socket in rete
+            s = new ServerSocket(8189); //trova il socket in rete
             ExecutorService exec = Executors.newFixedThreadPool(N_THREADS);
 
             //dove va messo lo shutdown dell'executorService?
@@ -24,6 +25,14 @@ public class MailServer {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            if(s != null) {
+                try {
+                    s.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 

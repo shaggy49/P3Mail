@@ -1,6 +1,6 @@
-package com.p3mail.application.server.testing;
+package com.p3mail.application.server.util;
 
-import com.p3mail.application.client.model.Email;
+import com.p3mail.application.connection.model.Email;
 
 import java.io.*;
 import java.util.Scanner;
@@ -8,7 +8,7 @@ import java.util.Scanner;
 /*
 * classe che permette di leggere il contenuto dei file email nella cartella server
 * */
-public class TestObjectInputStream {
+public class ReadMailAccountMailFiles {
     public static void main(String[] args) {
         while (true) {
             try {

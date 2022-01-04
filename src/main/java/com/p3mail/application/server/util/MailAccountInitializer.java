@@ -1,14 +1,12 @@
-package com.p3mail.application.server.testing;
+package com.p3mail.application.server.util;
 
-import com.p3mail.application.client.model.Email;
-import com.p3mail.application.server.RegisteredClient;
-import com.p3mail.application.server.model.MailAccount;
+import com.p3mail.application.connection.model.Email;
+import com.p3mail.application.server.model.RegisteredClient;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -16,7 +14,7 @@ import java.util.Random;
 * classe che si occupa di creare la cartella server e metterci dentro i file con la mail
 * degli utenti
 * */
-public class TestObjectOutputStream {
+public class MailAccountInitializer {
     public static void main(String[] args) {
         try {
             String[] people = new String[] {"Paolo", "Alessandro", "Enrico", "Giulia", "Gaia", "Simone"};
@@ -36,6 +34,7 @@ public class TestObjectOutputStream {
                 for (int i = 0; i < 10; i++) {
                     Random r = new Random();
                     Email email = new Email(
+                            i,
                             people[r.nextInt(people.length)],
                             List.of(people[r.nextInt(people.length)]),
                             objects[r.nextInt(objects.length)],

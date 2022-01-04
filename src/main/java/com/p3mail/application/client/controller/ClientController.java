@@ -1,8 +1,9 @@
 package com.p3mail.application.client.controller;
 
 import com.p3mail.application.client.model.Client;
-import com.p3mail.application.client.model.Email;
-import com.p3mail.application.server.MailNotFoundException;
+import com.p3mail.application.connection.model.Email;
+import com.p3mail.application.connection.request.DisconnectRequest;
+import com.p3mail.application.server.util.MailNotFoundException;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
@@ -12,12 +13,13 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.List;
 
-/**
- * Classe Controller 
- */
-
 public class ClientController {
-    Socket s = null;
+
+    Socket socketConnection = null;
+
+    ObjectInputStream in = null;
+
+    ObjectOutputStream out = null;
 
     @FXML
     private Label lblFrom;
@@ -52,7 +54,7 @@ public class ClientController {
         if (this.model != null)
             throw new IllegalStateException("Model can only be initialized once");
         //istanza nuovo client
-        model = new Client("Federico", "Ferreri", "ff@unito.it");
+        model = new Client("Federico", "Ferreri", "mcs@unito.it");
 
         selectedEmail = null;
 
@@ -62,11 +64,12 @@ public class ClientController {
 
         try {
             connectWithServer();
-            Alert mailSuccessAlert = new Alert(Alert.AlertType.INFORMATION);
-            mailSuccessAlert.setTitle("Success");
-            mailSuccessAlert.setHeaderText("You entered a valid mail address!");
-            mailSuccessAlert.show();
+//            Alert mailSuccessAlert = new Alert(Alert.AlertType.INFORMATION);
+//            mailSuccessAlert.setTitle("Success");
+//            mailSuccessAlert.setHeaderText("You entered a valid mail address!");
+//            mailSuccessAlert.show();
         } catch (MailNotFoundException e) {
+            //maybe handle from ClientMain class
             Alert mailErrorAlert = new Alert(Alert.AlertType.ERROR);
             mailErrorAlert.setTitle("Error");
             mailErrorAlert.setHeaderText(e.getMessage());
@@ -82,24 +85,24 @@ public class ClientController {
             e.printStackTrace();
         }
 
-        emptyEmail = new Email("", List.of(""), "", "");
+        emptyEmail = new Email(0, "", List.of(""), "", "");
 
         updateDetailView(emptyEmail);
     }
 
-    public void connectWithServer() throws MailNotFoundException, IOException, ClassNotFoundException {
+    private void connectWithServer() throws MailNotFoundException, IOException, ClassNotFoundException {
         String nomeHost = InetAddress.getLocalHost().getHostName();
         System.out.println(nomeHost);
-        s = new Socket(nomeHost, 8189);
+        socketConnection = new Socket(nomeHost, 8189);
         System.out.println("Connection established!");
-        InputStream inStream = s.getInputStream();
-        OutputStream outStream = s.getOutputStream();
-//            Scanner in = new Scanner(inStream);
-        ObjectInputStream in = new ObjectInputStream(inStream);
-        PrintWriter out = new PrintWriter(outStream, true);
-        out.println(model.emailAddressProperty().get());
-        System.out.println("Ho spedito il messaggio al socket");
+        InputStream socketInputStream = socketConnection.getInputStream();
+        OutputStream socketOutputStream = socketConnection.getOutputStream();
 
+        out = new ObjectOutputStream(socketOutputStream);
+        out.writeObject(model.emailAddressProperty().get());
+        System.out.println("I send my mail address to the server");
+
+        in = new ObjectInputStream(socketInputStream);
         Object serverResponse = in.readObject();
         if(serverResponse instanceof MailNotFoundException){
             throw new MailNotFoundException();
@@ -110,7 +113,20 @@ public class ClientController {
                 model.addEmail(email);
             }
         }
-        s.close();
+    }
+
+    public void closeSocketConnection() {
+        try {
+            if(out != null) {
+                out.writeObject(new DisconnectRequest());
+            }
+            if(socketConnection != null) {
+                socketConnection.close();
+                System.out.println("Connessione terminata");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -127,8 +143,12 @@ public class ClientController {
      */
     @FXML
     protected void onDeleteButtonClick() {
-        model.deleteEmail(selectedEmail);
-        updateDetailView(emptyEmail);
+        System.out.println("You want to delete the email with id = " + selectedEmail.getId()); //debug purpose
+        if(socketConnection != null) {
+            //TODO: also send a delete request to the mail server
+            model.deleteEmail(selectedEmail); //do this only if server says that all works fine!
+            updateDetailView(emptyEmail);
+        }
     }
 
      /**
