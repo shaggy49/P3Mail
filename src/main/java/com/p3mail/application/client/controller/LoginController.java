@@ -43,12 +43,12 @@ public class LoginController {
 			System.out.println("2 click sulla stessa mail");
 			System.out.println(rb.getId());
 
-//			Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../../mainWindow.fxml")));
-//			Scene scene = new Scene(root);
-//			Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-//			stage.setTitle("Email client");
-//			stage.setScene(scene);
-//			stage.show();
+			Parent root = FXMLLoader.load(Objects.requireNonNull(ClientMain.class.getResource("mainWindow.fxml")));
+			Scene scene = new Scene(root);
+			Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+			stage.setTitle("Email client");
+			stage.setScene(scene);
+			stage.show();
 		}
 	}
 

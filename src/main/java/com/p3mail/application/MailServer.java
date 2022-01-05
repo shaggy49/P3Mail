@@ -41,6 +41,11 @@ public class MailServer extends Application {
 	}
 
 	private class ThreadConnection extends Thread {
+
+		public ThreadConnection() {
+			setDaemon(true);
+		}
+
 		@Override
 		public void run() {
 			final int N_THREADS = 10;
