@@ -1,4 +1,4 @@
-package com.p3mail.application.client.controller;
+package com.p3mail.application;
 
 import com.p3mail.application.ClientMain;
 import javafx.fxml.FXML;
@@ -34,21 +34,22 @@ public class LoginController {
 	}
 
 	/*
-	 * When a email is clicked twice --> it changes controller and xml file.
+	 * When a email is clicked twice --> it changes controller and fxml file to MainWindowController and mainWindow.fxml.
 	 */
 	@FXML
-	private void handleRadioButton(MouseEvent e) throws IOException {
-		RadioButton rb = (RadioButton) e.getSource();
-		if(e.getClickCount() == 2) {
+	private void handleRadioButton(MouseEvent mouseEvent) throws IOException {
+		RadioButton rb = (RadioButton) mouseEvent.getSource();
+		if(mouseEvent.getClickCount() == 2) {
 			System.out.println("2 click sulla stessa mail");
 			System.out.println(rb.getId());
 
-//			Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../../mainWindow.fxml")));
-//			Scene scene = new Scene(root);
-//			Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-//			stage.setTitle("Email client");
-//			stage.setScene(scene);
-//			stage.show();
+			//qui sotto si cambia schermata al doppio click
+			Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("mainWindow.fxml"))) ;
+			Scene scene = new Scene(root);
+			Stage stage = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
+			stage.setTitle("Email client");
+			stage.setScene(scene);
+			stage.show();
 		}
 	}
 

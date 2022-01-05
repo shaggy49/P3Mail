@@ -1,53 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.text.Font?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.p3mail.application.NewMessageController">
 	<bottom>
 		<Pane prefHeight="47.0" prefWidth="600.0" style="-fx-background-color: #044A59#044A59 #044A59#044A59 #044A59#044A59 #044A59#044A59;" BorderPane.alignment="CENTER">
 			<children>
-				<HBox layoutX="398.0" layoutY="11.0" prefHeight="30.0" prefWidth="189.0">
+				<GridPane prefHeight="47.0" prefWidth="600.0">
+					<columnConstraints>
+						<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+						<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+					</columnConstraints>
+					<rowConstraints>
+						<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+					</rowConstraints>
 					<children>
-						<Button mnemonicParsing="false" prefHeight="28.0" prefWidth="80.0" style="-fx-background-radius: 20px; -fx-border-radius: 20px;" text="Annulla" textFill="#06bf9d">
-							<font>
-								<Font name="Arial Bold" size="13.0" />
-							</font>
-						</Button>
-						<Button fx:id="sendButton" contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="28.0" prefWidth="80.0" style="-fx-border-radius: 20px; -fx-background-color: #06BF9D#06BF9D #06BF9D#06BF9D; -fx-background-radius: 20px;" text="Invia" textFill="WHITE">
-							<graphic>
-								<ImageView fitHeight="20.0" fitWidth="20.0">
-									<image>
-										<Image url="@icons/send.png" />
-									</image>
-								</ImageView>
-							</graphic>
-							<font>
-								<Font name="Arial Bold" size="13.0" />
-							</font>
-							<HBox.margin>
-								<Insets left="19.0" />
-							</HBox.margin>
-						</Button>
+						<HBox alignment="CENTER_RIGHT" GridPane.columnIndex="1">
+							<children>
+								<Button mnemonicParsing="false" prefHeight="28.0" style="-fx-background-radius: 20px; -fx-border-radius: 20px;" text="Annulla" textFill="#06bf9d" onMouseClicked="#handleButton">
+									<font>
+										<Font name="Arial Bold" size="13.0" />
+									</font>
+								</Button>
+								<Button fx:id="sendButton" contentDisplay="RIGHT" mnemonicParsing="false" style="-fx-border-radius: 20px; -fx-background-color: #06BF9D#06BF9D #06BF9D#06BF9D; -fx-background-radius: 20px;" text="Invia" textFill="WHITE" onMouseClicked="#handleButton">
+									<graphic>
+										<ImageView fitHeight="20.0" fitWidth="20.0">
+											<image>
+												<Image url="@icons/send.png" />
+											</image>
+										</ImageView>
+									</graphic>
+									<font>
+										<Font name="Arial Bold" size="13.0" />
+									</font>
+									<HBox.margin>
+										<Insets left="19.0" />
+									</HBox.margin>
+								</Button>
+							</children>
+							<padding>
+								<Insets right="20.0" />
+							</padding>
+						</HBox>
 					</children>
-					<padding>
-						<Insets right="20.0" />
-					</padding>
-				</HBox>
+				</GridPane>
 			</children>
 		</Pane>
 	</bottom>
@@ -61,14 +61,18 @@
 			<rowConstraints>
 				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
 				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
 			</rowConstraints>
 			<children>
 				<TextField fx:id="receiversField" promptText="Destinatario/i" GridPane.columnIndex="1">
 					<GridPane.margin>
 						<Insets right="10.0" top="5.0" />
 					</GridPane.margin>
+					<font>
+						<Font name="Arial" size="13.0" />
+					</font>
 				</TextField>
-				<TextField fx:id="objectField" promptText="Oggetto" GridPane.columnIndex="1" GridPane.rowIndex="1">
+				<TextField fx:id="objectField" promptText="Oggetto" GridPane.columnIndex="1" GridPane.rowIndex="2">
 					<GridPane.margin>
 						<Insets bottom="5.0" right="10.0" top="5.0" />
 					</GridPane.margin>
@@ -81,7 +85,7 @@
 						<Insets left="10.0" />
 					</GridPane.margin>
 				</Label>
-				<Label layoutX="10.0" layoutY="17.0" text="Oggetto:" textFill="WHITE" GridPane.rowIndex="1">
+				<Label layoutX="10.0" layoutY="17.0" text="Oggetto:" textFill="WHITE" GridPane.rowIndex="2">
 					<font>
 						<Font name="Arial Bold" size="13.0" />
 					</font>
@@ -89,7 +93,7 @@
 						<Insets left="10.0" />
 					</GridPane.margin>
 				</Label>
-				<Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="15.0" prefWidth="17.0" style="-fx-background-radius: 50; -fx-background-color: #78B8BF#78B8BF #78B8BF#78B8BF #78B8BF#78B8BF #78B8BF#78B8BF;" GridPane.columnIndex="2">
+				<Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="15.0" prefWidth="17.0" style="-fx-background-radius: 50; -fx-background-color: #78B8BF#78B8BF #78B8BF#78B8BF #78B8BF#78B8BF #78B8BF#78B8BF;" GridPane.columnIndex="2" onMouseClicked="#handleNewRecipients">
 					<graphic>
 						<ImageView fitHeight="11.0" fitWidth="11.0">
 							<image>
@@ -101,21 +105,12 @@
 						<Insets top="4.0" />
 					</GridPane.margin>
 				</Button>
+				<Label fx:id="moreRecipientsLabel" prefHeight="17.0" prefWidth="407.0" text="Inserisci uno spazio tra le mail se vuoi aggiungere più destinatari" textFill="#06bf9d"
+					   GridPane.columnIndex="1" GridPane.rowIndex="1" />
 			</children>
 		</GridPane>
 	</top>
 	<center>
-		<TitledPane animated="false" prefHeight="285.0" prefWidth="600.0" text="Nuovo messaggio" textFill="#0a6873" BorderPane.alignment="CENTER">
-			<content>
-				<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-					<children>
-						<TextArea layoutX="12.0" layoutY="15.0" prefHeight="225.0" prefWidth="575.0" />
-					</children>
-				</AnchorPane>
-			</content>
-			<font>
-				<Font name="Arial Bold" size="13.0" />
-			</font>
-		</TitledPane>
+		<TextArea prefHeight="200.0" prefWidth="200.0" promptText="Scrivi messaggio" BorderPane.alignment="CENTER" />
 	</center>
 </BorderPane>
