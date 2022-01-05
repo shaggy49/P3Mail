@@ -2,8 +2,9 @@ package com.p3mail.application.client.controller;
 
 import com.p3mail.application.client.model.Client;
 import com.p3mail.application.connection.model.Email;
+import com.p3mail.application.connection.request.DeleteRequest;
 import com.p3mail.application.connection.request.DisconnectRequest;
-import com.p3mail.application.server.util.MailNotFoundException;
+import com.p3mail.application.connection.MailNotFoundException;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
@@ -54,7 +55,7 @@ public class ClientController {
         if (this.model != null)
             throw new IllegalStateException("Model can only be initialized once");
         //istanza nuovo client
-        model = new Client("Federico", "Ferreri", "mcs@unito.it");
+        model = new Client("Federico", "Ferreri", "ff@unito.it");
 
         selectedEmail = null;
 
@@ -145,9 +146,28 @@ public class ClientController {
     protected void onDeleteButtonClick() {
         System.out.println("You want to delete the email with id = " + selectedEmail.getId()); //debug purpose
         if(socketConnection != null) {
-            //TODO: also send a delete request to the mail server
-            model.deleteEmail(selectedEmail); //do this only if server says that all works fine!
-            updateDetailView(emptyEmail);
+            try {
+                out.writeObject(new DeleteRequest(selectedEmail.getId()));
+                Boolean result = (Boolean) in.readObject();
+                if(result) {
+                    model.deleteEmail(selectedEmail); //do this only if server says that all works fine!
+                    updateDetailView(emptyEmail);
+                }
+                else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setHeaderText("There was a problem deleting this email!");
+                    alert.show();
+                }
+            } catch (IOException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("The server doesn't seem connected!");
+                alert.show();
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         }
     }
 

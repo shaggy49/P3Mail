@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.List;
 import java.util.Random;
+import org.apache.commons.io.FileUtils;
 
 /*
 * classe che si occupa di creare la cartella server e metterci dentro i file con la mail
@@ -16,20 +17,21 @@ import java.util.Random;
 * */
 public class MailAccountInitializer {
     public static void main(String[] args) {
+
+        List<String> registeredMailAccounts = new RegisteredClient().getRegisteredMails();
+        String[] people = new String[] {"Paolo", "Alessandro", "Enrico", "Giulia", "Gaia", "Simone"};
+        String[] objects = new String[] {
+                "Importante", "A proposito della nostra ultima conversazione", "Tanto va la gatta al lardo",
+                "Non dimenticare...", "Domani scuola" };
+        String[] texts = new String[] {
+                "È necessario che ci parliamo di persona, per mail rischiamo sempre fraintendimenti",
+                "Ricordati di comprare il latte tornando a casa",
+                "L'appuntamento è per domani alle 9, ci vediamo al solito posto",
+                "Ho sempre pensato valesse 42, tu sai di cosa parlo"
+        };
+
         try {
-            String[] people = new String[] {"Paolo", "Alessandro", "Enrico", "Giulia", "Gaia", "Simone"};
-            String[] objects = new String[] {
-                    "Importante", "A proposito della nostra ultima conversazione", "Tanto va la gatta al lardo",
-                    "Non dimenticare...", "Domani scuola" };
-            String[] texts = new String[] {
-                    "È necessario che ci parliamo di persona, per mail rischiamo sempre fraintendimenti",
-                    "Ricordati di comprare il latte tornando a casa",
-                    "L'appuntamento è per domani alle 9, ci vediamo al solito posto",
-                    "Ho sempre pensato valesse 42, tu sai di cosa parlo"
-            };
-
-            List<String> registeredMailAccounts = new RegisteredClient().getRegisteredMails();
-
+            FileUtils.deleteDirectory(new File("." + File.separator + "server"));
             for (String account : registeredMailAccounts) {
                 for (int i = 0; i < 10; i++) {
                     Random r = new Random();
@@ -53,7 +55,7 @@ public class MailAccountInitializer {
                 }
             }
 
-
+            System.out.println("Generated random email files, check server folder");
 
         } catch (IOException e) {
             e.printStackTrace();

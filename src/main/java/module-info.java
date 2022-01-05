@@ -1,6 +1,7 @@
 module com.p3mail.application.p3mail {
     requires javafx.controls;
     requires javafx.fxml;
+    requires org.apache.commons.io;
 
 
     exports com.p3mail.application;
