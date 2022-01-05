@@ -1,4 +1,4 @@
-package com.p3mail.application;
+package com.p3mail.application.client.controller;
 
 import com.p3mail.application.ClientMain;
 import javafx.fxml.FXML;
@@ -33,6 +33,9 @@ public class LoginController {
 		assert tgEmail != null : "fx:id=\"tgEmail\" was not injected: check your FXML file 'logIn.fxml'.";
 	}
 
+	/*
+	 * When a email is clicked twice --> it changes controller and xml file.
+	 */
 	@FXML
 	private void handleRadioButton(MouseEvent e) throws IOException {
 		RadioButton rb = (RadioButton) e.getSource();
@@ -40,12 +43,12 @@ public class LoginController {
 			System.out.println("2 click sulla stessa mail");
 			System.out.println(rb.getId());
 
-			Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("@mainWindow.fxml")));
-			Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-			Scene scene = new Scene(root);
-			stage.setTitle("Email client");
-			stage.setScene(scene);
-			stage.show();
+//			Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../../mainWindow.fxml")));
+//			Scene scene = new Scene(root);
+//			Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+//			stage.setTitle("Email client");
+//			stage.setScene(scene);
+//			stage.show();
 		}
 	}
 

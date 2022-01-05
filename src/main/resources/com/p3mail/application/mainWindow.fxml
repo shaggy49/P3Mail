@@ -19,7 +19,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="543.0" prefWidth="722.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.p3mail.application.client.controller.ClientController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="543.0" prefWidth="722.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.p3mail.application.client.controller.MainWindowController">
 	<center>
 		<SplitPane dividerPositions="0.36875" prefHeight="638.0" prefWidth="595.0" BorderPane.alignment="CENTER">
 			<items>
@@ -83,7 +83,7 @@
 						</HBox>
 					</top>
 					<center>
-						<ListView fx:id="lstEmails" onMouseClicked="#showSelectedEmail" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+						<ListView fx:id="lstEmails" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
 					</center>
 					<right>
 						<ScrollBar orientation="VERTICAL" BorderPane.alignment="CENTER" />
