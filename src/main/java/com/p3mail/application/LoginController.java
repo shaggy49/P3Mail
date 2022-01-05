@@ -43,10 +43,16 @@ public class LoginController {
 			System.out.println("2 click sulla stessa mail");
 			System.out.println(rb.getId());
 
+<<<<<<< HEAD:src/main/java/com/p3mail/application/LoginController.java
 			//qui sotto si cambia schermata al doppio click
 			Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("mainWindow.fxml"))) ;
 			Scene scene = new Scene(root);
 			Stage stage = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
+=======
+			Parent root = FXMLLoader.load(Objects.requireNonNull(ClientMain.class.getResource("mainWindow.fxml")));
+			Scene scene = new Scene(root);
+			Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+>>>>>>> origin/feature/view-controller:src/main/java/com/p3mail/application/client/controller/LoginController.java
 			stage.setTitle("Email client");
 			stage.setScene(scene);
 			stage.show();
