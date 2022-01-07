@@ -71,8 +71,7 @@ public class ClientController {
             mailErrorAlert.setTitle("Error");
             mailErrorAlert.setHeaderText(e.getMessage());
             mailErrorAlert.show();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");

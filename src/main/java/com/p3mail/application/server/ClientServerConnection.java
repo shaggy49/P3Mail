@@ -23,7 +23,7 @@ public class ClientServerConnection implements Runnable {
     @Override
     public void run() {
         try {
-            //è una buona idea gestire tutta l'interazione con un client dentro un unico thread?
+            // è una buona idea gestire tutta l'interazione con un client dentro un unico thread? Sì :)
             try {
                 InputStream inStream = incoming.getInputStream();
                 OutputStream outStream = incoming.getOutputStream();

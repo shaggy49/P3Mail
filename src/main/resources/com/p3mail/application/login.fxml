@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-image: url('images/background.jpg')" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.p3mail.application.client.controller.LoginController">
 	<children>
 		<ImageView fitHeight="400.0" fitWidth="601.0" style="-fx-opacity: 85%;">
 			<image>
@@ -26,15 +23,18 @@
 						<Font name="Arial Bold" size="18.0" />
 					</font>
 				</Label>
-            <RadioButton mnemonicParsing="false" text="ff.unito.it" textFill="WHITE">
+            <RadioButton fx:id="accountFf" mnemonicParsing="false" text="ff.unito.it" textFill="WHITE" onMouseClicked="#handleRadioButton">
                <font>
                   <Font name="Arial" size="13.0" />
                </font>
                <VBox.margin>
                   <Insets bottom="4.0" right="10.0" />
                </VBox.margin>
+               <toggleGroup>
+                  <ToggleGroup fx:id="tgEmail" />
+               </toggleGroup>
             </RadioButton>
-            <RadioButton mnemonicParsing="false" text="af.unito.it" textFill="WHITE">
+            <RadioButton fx:id="accountAf" mnemonicParsing="false" text="af.unito.it" textFill="WHITE" toggleGroup="$tgEmail" onMouseClicked="#handleRadioButton">
                <font>
                   <Font name="Arial" size="13.0" />
                </font>
@@ -42,7 +42,7 @@
                   <Insets bottom="4.0" right="6.0" />
                </VBox.margin>
             </RadioButton>
-            <RadioButton layoutX="78.0" layoutY="225.0" mnemonicParsing="false" text="mc.unito.it" textFill="WHITE">
+            <RadioButton fx:id="accountMc" layoutX="78.0" layoutY="225.0" mnemonicParsing="false" text="mc.unito.it" textFill="WHITE" toggleGroup="$tgEmail" onMouseClicked="#handleRadioButton">
                <font>
                   <Font name="Arial" size="13.0" />
                </font>
