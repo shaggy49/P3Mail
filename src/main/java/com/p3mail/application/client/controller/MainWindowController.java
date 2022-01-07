@@ -1,5 +1,6 @@
-package com.p3mail.application;
+package com.p3mail.application.client.controller;
 
+import com.p3mail.application.ClientMain;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -50,7 +51,7 @@ public class MainWindowController {
 	private TextArea txtEmailContent;
 
 	@FXML
-	private ListView<?> lstEmails;
+	private ListView<Email> lstEmails;
 
 	@FXML
 	private BorderPane pnlEmailList;
@@ -67,19 +68,6 @@ public class MainWindowController {
 
 	@FXML
 	public void initialize(){
-		assert imgIcon != null : "fx:id=\"imgIcon\" was not injected: check your FXML file 'mainWindow.fxml'.";
-		assert lblEmailAddress != null : "fx:id=\"lblEmailAddress\" was not injected: check your FXML file 'mainWindow.fxml'.";
-		assert lblEmailAddress1 != null : "fx:id=\"lblEmailAddress1\" was not injected: check your FXML file 'mainWindow.fxml'.";
-		assert lblEmailAddress11 != null : "fx:id=\"lblEmailAddress11\" was not injected: check your FXML file 'mainWindow.fxml'.";
-		assert lblFrom != null : "fx:id=\"lblFrom\" was not injected: check your FXML file 'mainWindow.fxml'.";
-		assert lblObject != null : "fx:id=\"lblObject\" was not injected: check your FXML file 'mainWindow.fxml'.";
-		assert lblTo != null : "fx:id=\"lblTo\" was not injected: check your FXML file 'mainWindow.fxml'.";
-		assert lstEmails != null : "fx:id=\"lstEmails\" was not injected: check your FXML file 'mainWindow.fxml'.";
-		assert pnlEmailList != null : "fx:id=\"pnlEmailList\" was not injected: check your FXML file 'mainWindow.fxml'.";
-		assert pnlReadMessage != null : "fx:id=\"pnlReadMessage\" was not injected: check your FXML file 'mainWindow.fxml'.";
-		assert txtEmailContent != null : "fx:id=\"txtEmailContent\" was not injected: check your FXML file 'mainWindow.fxml'.";
-
-
 		if (this.model != null)
 			throw new IllegalStateException("Model can only be initialized once");
 
@@ -89,7 +77,7 @@ public class MainWindowController {
 		selectedEmail = null;
 
 		//binding tra lstEmails e inboxProperty
-		//lstEmails.itemsProperty().bind(model.inboxProperty());
+		lstEmails.itemsProperty().bind(model.inboxProperty());
 		lblEmailAddress.textProperty().bind(model.emailAddressProperty());
 
 		try {
@@ -189,7 +177,7 @@ public class MainWindowController {
 	 * an email forwarding.
 	 */
 	public void handleWriteButton(MouseEvent mouseEvent) throws IOException {
-		FXMLLoader loader = new FXMLLoader((getClass().getResource("newMessage.fxml"))) ;
+		FXMLLoader loader = new FXMLLoader((ClientMain.class.getResource("newMessage.fxml"))) ;
 		Parent root = (Parent) loader.load();
 
 		NewMessageController newMsgController = loader.getController();
@@ -207,7 +195,7 @@ public class MainWindowController {
 	 * and fxml file to ReplyController and reply.fxml.
 	 */
 	public void handleRepliesButton(MouseEvent mouseEvent) throws IOException {
-		Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("reply.fxml"))) ;
+		Parent root = FXMLLoader.load(Objects.requireNonNull(ClientMain.class.getResource("reply.fxml"))) ;
 		Scene scene = new Scene(root);
 		stage = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
 		stage.setTitle("Rispondi al messaggio");
@@ -223,7 +211,7 @@ public class MainWindowController {
 	 * an email forwarding.
 	 */
 	public void handleForwardButton(MouseEvent mouseEvent) throws IOException {
-		FXMLLoader loader = new FXMLLoader((getClass().getResource("newMessage.fxml"))) ;
+		FXMLLoader loader = new FXMLLoader((ClientMain.class.getResource("newMessage.fxml"))) ;
 		Parent root = (Parent) loader.load();
 
 		NewMessageController newMsgController = loader.getController();

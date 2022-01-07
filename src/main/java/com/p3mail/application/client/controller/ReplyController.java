@@ -1,9 +1,11 @@
-package com.p3mail.application;
+package com.p3mail.application.client.controller;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
+
+import com.p3mail.application.ClientMain;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -30,8 +32,6 @@ public class ReplyController {
 
 	@FXML
 	void initialize() {
-		assert receiversField != null : "fx:id=\"receiversField\" was not injected: check your FXML file 'reply.fxml'.";
-		assert sendButton != null : "fx:id=\"sendButton\" was not injected: check your FXML file 'reply.fxml'.";
 
 	}
 
@@ -39,7 +39,7 @@ public class ReplyController {
 	 * When send button or cancel buttons are clicked it changes controller and fxml file to MainWindowController and mainWindow.fxml.
 	 */
 	public void handleButtons(MouseEvent mouseEvent) throws IOException {
-		Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("mainWindow.fxml"))) ;
+		Parent root = FXMLLoader.load(Objects.requireNonNull(ClientMain.class.getResource("mainWindow.fxml"))) ;
 		Scene scene = new Scene(root);
 		Stage stage = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
 		stage.setTitle("Email client");

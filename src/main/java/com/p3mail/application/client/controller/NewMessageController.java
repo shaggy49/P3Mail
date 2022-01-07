@@ -1,8 +1,8 @@
-package com.p3mail.application;
+package com.p3mail.application.client.controller;
 
+import com.p3mail.application.ClientMain;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.util.Duration;
 import javafx.animation.FadeTransition;
@@ -15,16 +15,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.Objects;
-import java.util.ResourceBundle;
 
-/*
- * This class must implement Initializable class beacause we want to pass a Boolean value
- * between this class and MainWindowController class. This is necessary to set
- * the object field ad not editable in case of an email forwarding.
- */
-public class NewMessageController implements Initializable {
+public class NewMessageController {
 
 	@FXML
 	private TextField objectField;
@@ -38,14 +31,13 @@ public class NewMessageController implements Initializable {
 	@FXML
 	private Label moreRecipientsLabel;
 
-
+	/*
+	 * It takes a Boolean value from MainWindowController class. This is necessary to set
+	 * the object field ad not editable in case of an email forwarding.
+	 */
 	@FXML
-	void initialize (Boolean isNewMessage){
+	public void initialize (Boolean isNewMessage){
 		System.out.println(isNewMessage);
-
-		assert objectField != null : "fx:id=\"objectField\" was not injected: check your FXML file 'newMessage.fxml'.";
-		assert receiversField != null : "fx:id=\"receiversField\" was not injected: check your FXML file 'newMessage.fxml'.";
-		assert sendButton != null : "fx:id=\"sendButton\" was not injected: check your FXML file 'newMessage.fxml'.";
 
 		moreRecipientsLabel.setVisible(false);
 
@@ -57,7 +49,7 @@ public class NewMessageController implements Initializable {
 	 * When send button or cancel buttons are clicked it changes controller and fxml file to MainWindowController and mainWindow.fxml.
 	 */
 	public void handleButton(MouseEvent mouseEvent) throws IOException {
-		Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("mainWindow.fxml"))) ;
+		Parent root = FXMLLoader.load(Objects.requireNonNull(ClientMain.class.getResource("mainWindow.fxml"))) ;
 		Scene scene = new Scene(root);
 		Stage stage = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
 		stage.setTitle("Email client");
@@ -76,10 +68,5 @@ public class NewMessageController implements Initializable {
 		fadeOut.setFromValue(2);
 		fadeOut.setToValue(0);
 		fadeOut.play();
-	}
-
-	@Override
-	public void initialize(URL url, ResourceBundle resourceBundle) {
-
 	}
 }

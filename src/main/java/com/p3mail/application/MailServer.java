@@ -14,10 +14,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class MailServer extends Application {
+	boolean closeConnection = false;
 	ServerSocket s = null;
+	ThreadConnection tc = null;
 
 	public static void main(String[] args) {
 		launch();
+		System.out.println("mai");
 	}
 
 	@Override
@@ -28,7 +31,7 @@ public class MailServer extends Application {
 		stage.setScene(scene);
 		stage.show();
 
-		ThreadConnection tc = new ThreadConnection();
+		tc = new ThreadConnection();
 		tc.start();
 
 //		stage.setOnCloseRequest(event -> {
@@ -40,8 +43,14 @@ public class MailServer extends Application {
 //		});
 	}
 
-	private class ThreadConnection extends Thread {
+	@Override
+	public void stop() throws Exception {
+		closeConnection = true;
+		super.stop();
+		System.exit(0);
+	}
 
+	private class ThreadConnection extends Thread {
 		public ThreadConnection() {
 			setDaemon(true);
 		}
@@ -58,13 +67,21 @@ public class MailServer extends Application {
 				ExecutorService exec = Executors.newFixedThreadPool(N_THREADS);
 				//dove va messo lo shutdown dell'executorService?
 
-				while (true) {
+				while (!closeConnection) {
 					Socket incoming = s.accept(); // si mette in attesa di richiesta di connessione e la apre
 					Runnable connection = new ClientServerConnection(incoming);
 					exec.execute(connection);
 				}
+				exec.shutdown();
 			} catch (IOException e) {
 				e.printStackTrace();
+			}
+			finally {
+				try {
+					s.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
