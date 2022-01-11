@@ -115,7 +115,7 @@ public class ClientServerConnection implements Runnable {
             String pathToUser = "." + File.separator + "server" + File.separator + userEmailAddress;
             File directoryPath = new File(pathToUser);
             String[] userEmails = directoryPath.list((dir, name) -> name.contains("email_"));
-            System.out.println(Arrays.stream(userEmails).toList().toString());
+//            System.out.println(Arrays.stream(userEmails).toList().toString());
             for (String userEmail : userEmails) {
                 File file = new File(pathToUser + File.separator + userEmail);
                 FileInputStream fos = new FileInputStream(file);

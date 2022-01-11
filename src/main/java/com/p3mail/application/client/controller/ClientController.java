@@ -18,8 +18,6 @@ public class ClientController {
 
     Socket socketConnection = null;
 
-    ObjectInputStream in = null;
-
     ObjectOutputStream out = null;
 
     @FXML
@@ -55,7 +53,7 @@ public class ClientController {
         if (this.model != null)
             throw new IllegalStateException("Model can only be initialized once");
         //istanza nuovo client
-        model = new Client("Federico", "Ferreri", "ff@unito.it");
+        model = new Client("Federico", "Ferreri", "af@unito.it");
 
         selectedEmail = null;
 
@@ -65,18 +63,7 @@ public class ClientController {
 
         try {
             connectWithServer();
-//            Alert mailSuccessAlert = new Alert(Alert.AlertType.INFORMATION);
-//            mailSuccessAlert.setTitle("Success");
-//            mailSuccessAlert.setHeaderText("You entered a valid mail address!");
-//            mailSuccessAlert.show();
-        } catch (MailNotFoundException e) {
-            //maybe handle from ClientMain class
-            Alert mailErrorAlert = new Alert(Alert.AlertType.ERROR);
-            mailErrorAlert.setTitle("Error");
-            mailErrorAlert.setHeaderText(e.getMessage());
-            mailErrorAlert.show();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
@@ -91,29 +78,21 @@ public class ClientController {
         updateDetailView(emptyEmail);
     }
 
-    private void connectWithServer() throws MailNotFoundException, IOException, ClassNotFoundException {
+    private void connectWithServer() throws IOException, ClassNotFoundException {
         String nomeHost = InetAddress.getLocalHost().getHostName();
         System.out.println(nomeHost);
         socketConnection = new Socket(nomeHost, 8189);
         System.out.println("Connection established!");
-        InputStream socketInputStream = socketConnection.getInputStream();
         OutputStream socketOutputStream = socketConnection.getOutputStream();
+
 
         out = new ObjectOutputStream(socketOutputStream);
         out.writeObject(model.emailAddressProperty().get());
         System.out.println("I send my mail address to the server");
 
-        in = new ObjectInputStream(socketInputStream);
-        Object serverResponse = in.readObject();
-        if(serverResponse instanceof MailNotFoundException){
-            throw new MailNotFoundException();
-        }
-        else {
-            List<Email> userEMail = (List<Email>) serverResponse;
-            for (Email email : userEMail) {
-                model.addEmail(email);
-            }
-        }
+        ClientListener clientListener = new ClientListener(this, socketConnection);
+        new Thread(clientListener).start();
+
     }
 
     public void closeSocketConnection() {
@@ -148,30 +127,33 @@ public class ClientController {
         if(socketConnection != null) {
             try {
                 out.writeObject(new DeleteRequest(selectedEmail.getId()));
-                Boolean result = (Boolean) in.readObject();
-                if(result) {
-                    model.deleteEmail(selectedEmail); //do this only if server says that all works fine!
-                    updateDetailView(emptyEmail);
-                }
-                else {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Error");
-                    alert.setHeaderText("There was a problem deleting this email!");
-                    alert.show();
-                }
             } catch (IOException e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText("The server doesn't seem connected!");
                 alert.show();
                 e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
             }
         }
     }
 
-     /**
+    public void addEmailToInbox(Email email) {
+        model.addEmail(email);
+    }
+
+    public void deleteFailed() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText("There was a problem deleting this email!");
+        alert.show();
+    }
+
+    public void deleteAndUpdateView() {
+        model.deleteEmail(selectedEmail); //do this only if server says that all works fine!
+        updateDetailView(emptyEmail);
+    }
+
+    /**
      * Mostra la mail selezionata nella vista
      */
      @FXML
