@@ -2,6 +2,9 @@ package com.p3mail.application.client.controller;
 
 import com.p3mail.application.connection.MailNotFoundException;
 import com.p3mail.application.connection.model.Email;
+import com.p3mail.application.connection.NewEmailNotification;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -22,10 +25,15 @@ public class ClientListener implements Runnable{
     @Override
     public void run() {
         try {
-            while (socket.isConnected()) {
+            while (true) {
                 Object serverResponse = in.readObject();
                 if(serverResponse instanceof MailNotFoundException){
-                    throw new MailNotFoundException();
+                    Platform.runLater(() -> {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Error");
+                        alert.setHeaderText("The emailAddress is not registered!");
+                        alert.show();
+                    });
                 }
                 else if (serverResponse instanceof List) {
                     List<Email> userEMail = (List<Email>) serverResponse;
@@ -39,18 +47,29 @@ public class ClientListener implements Runnable{
                         controller.deleteAndUpdateView();
                     }
                     else {
-                        controller.deleteFailed();
+                        Platform.runLater(() -> {
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setTitle("Error");
+                            alert.setHeaderText("There was a problem deleting this email!");
+                            alert.show();
+                        });
                     }
                 }
+                else if (serverResponse instanceof NewEmailNotification) {
+                    String emailAddress = ((NewEmailNotification) serverResponse).getFromEmailAddress();
+                    Platform.runLater(() -> {
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Notification");
+                        alert.setHeaderText("Something arrived from " + emailAddress);
+                        alert.show();
+                    });
+                    //metodo del controller che aggiunge la mail all'inbox in real time
+                }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ignored) {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-        } catch (MailNotFoundException e) {
-            e.printStackTrace();
-        }
-        finally {
+        } finally {
             try {
                 in.close();
             } catch (IOException e) {

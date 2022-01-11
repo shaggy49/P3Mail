@@ -4,7 +4,7 @@ import com.p3mail.application.client.model.Client;
 import com.p3mail.application.connection.model.Email;
 import com.p3mail.application.connection.request.DeleteRequest;
 import com.p3mail.application.connection.request.DisconnectRequest;
-import com.p3mail.application.connection.MailNotFoundException;
+import com.p3mail.application.connection.request.TriggerServerRequest;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
@@ -53,7 +53,7 @@ public class ClientController {
         if (this.model != null)
             throw new IllegalStateException("Model can only be initialized once");
         //istanza nuovo client
-        model = new Client("Federico", "Ferreri", "af@unito.it");
+        model = new Client("Federico", "Ferreri", "ff@unito.it");
 
         selectedEmail = null;
 
@@ -113,10 +113,10 @@ public class ClientController {
      * Aggiunge una mail alla lista
      */
     @FXML
-    protected void onAddButtonClick() {
-        model.addEmail(selectedEmail);
-        updateDetailView(emptyEmail);
+    protected void onAddButtonClick() throws IOException {
+        out.writeObject(new TriggerServerRequest());
     }
+
 
     /**
      * Elimina la mail selezionata
@@ -139,13 +139,6 @@ public class ClientController {
 
     public void addEmailToInbox(Email email) {
         model.addEmail(email);
-    }
-
-    public void deleteFailed() {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setHeaderText("There was a problem deleting this email!");
-        alert.show();
     }
 
     public void deleteAndUpdateView() {

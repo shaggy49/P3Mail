@@ -4,6 +4,8 @@ import com.p3mail.application.connection.model.Email;
 import com.p3mail.application.connection.request.ClientRequest;
 import com.p3mail.application.connection.request.DeleteRequest;
 import com.p3mail.application.connection.request.DisconnectRequest;
+import com.p3mail.application.connection.request.TriggerServerRequest;
+import com.p3mail.application.connection.NewEmailNotification;
 import com.p3mail.application.server.model.RegisteredClient;
 import com.p3mail.application.connection.MailNotFoundException;
 
@@ -11,12 +13,14 @@ import java.io.*;
 import java.net.Socket;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Vector;
 
 public class ClientServerConnection implements Runnable {
     private Socket incoming;
     private String userEmailAddress;
+    ObjectOutputStream out;
+    private Vector<ClientServerConnection> clients;
 
 
     /**
@@ -24,8 +28,9 @@ public class ClientServerConnection implements Runnable {
      *
      * @param in the incoming socket
      */
-    public ClientServerConnection(Socket in) {
+    public ClientServerConnection(Socket in, Vector<ClientServerConnection> clients) {
         incoming = in;
+        this.clients = clients;
     }
 
     @Override
@@ -37,7 +42,7 @@ public class ClientServerConnection implements Runnable {
                 OutputStream outStream = incoming.getOutputStream();
 
                 ObjectInputStream in = new ObjectInputStream(inStream);
-                ObjectOutputStream out = new ObjectOutputStream(outStream);
+                out = new ObjectOutputStream(outStream);
 
                 userEmailAddress = (String) in.readObject();
                 RegisteredClient registeredClients = new RegisteredClient();
@@ -72,6 +77,9 @@ public class ClientServerConnection implements Runnable {
                         boolean result = deleteEmailWithId(emailId);
                         out.writeObject(result);
                     }
+                    else if (request instanceof TriggerServerRequest) {
+                        notifyAllConnectedClients();
+                    }
                     //else if socket input type of richiesta di invio => inviaMail()
                     //else error ed esci
                 }
@@ -91,6 +99,13 @@ public class ClientServerConnection implements Runnable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private void notifyAllConnectedClients() throws IOException {
+        for (ClientServerConnection connectedClient : clients) {
+            if(connectedClient.userEmailAddress.equals("ff@unito.it"))
+                connectedClient.out.writeObject(new NewEmailNotification("Fedù"));
         }
     }
 
@@ -115,7 +130,6 @@ public class ClientServerConnection implements Runnable {
             String pathToUser = "." + File.separator + "server" + File.separator + userEmailAddress;
             File directoryPath = new File(pathToUser);
             String[] userEmails = directoryPath.list((dir, name) -> name.contains("email_"));
-//            System.out.println(Arrays.stream(userEmails).toList().toString());
             for (String userEmail : userEmails) {
                 File file = new File(pathToUser + File.separator + userEmail);
                 FileInputStream fos = new FileInputStream(file);

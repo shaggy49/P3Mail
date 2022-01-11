@@ -3,6 +3,7 @@ package com.p3mail.application.server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -15,13 +16,15 @@ public class MailServer {
         try {
             s = new ServerSocket(8189); //trova il socket in rete
             ExecutorService exec = Executors.newFixedThreadPool(N_THREADS);
+            Vector<ClientServerConnection> clientsConnected = new Vector<>();
 
             //dove va messo lo shutdown dell'executorService?
 
             while (true) {
                 Socket incoming = s.accept(); // si mette in attesa di richiesta di connessione e la apre
-                Runnable connection = new ClientServerConnection(incoming);
+                ClientServerConnection connection = new ClientServerConnection(incoming, clientsConnected);
                 exec.execute(connection);
+                clientsConnected.add(connection);
             }
         } catch (IOException e) {
             e.printStackTrace();
