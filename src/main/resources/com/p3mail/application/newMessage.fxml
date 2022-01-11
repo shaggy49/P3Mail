@@ -110,6 +110,6 @@
 		</GridPane>
 	</top>
 	<center>
-		<TextArea onMouseClicked="#handleCheckIfTextChanged" prefHeight="200.0" prefWidth="200.0" promptText="Scrivi messaggio" BorderPane.alignment="CENTER" />
+		<TextArea fx:id="textContent" onMouseClicked="#handleCheckIfTextChanged" prefHeight="200.0" prefWidth="200.0" promptText="Scrivi messaggio" BorderPane.alignment="CENTER" />
 	</center>
 </BorderPane>

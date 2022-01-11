@@ -58,13 +58,18 @@ public class MainWindowController {
 	@FXML
 	private BorderPane pnlReadMessage;
 
+	@FXML
+	private Button reply;
+
+	@FXML
+	private Button replyAll;
+
 	private Email selectedEmail;
 	private Email emptyEmail;
 	private Client model;
 
-
 	@FXML
-	public void initialize(Client model){
+	public void initialize(Client model) {
 		this.model = model;
 
 		selectedEmail = null;
@@ -75,21 +80,12 @@ public class MainWindowController {
 		lblEmailAddress.textProperty().bind(model.emailAddressProperty());
 		lstEmails.itemsProperty().bind(model.inboxProperty());
 
+//TODO capire che cosa fa ehehe
 //		emptyEmail = new Email("", List.of(""), "", "");
 //
 //		updateDetailView(emptyEmail);
 	}
-//
-//
-//	/**
-//	 * Aggiunge una mail alla lista
-//	 */
-//	@FXML
-//	protected void onAddButtonClick() {
-//		model.addEmail(selectedEmail);
-//		updateDetailView(emptyEmail);
-//	}
-//
+
 	/**
 	 * Mostra la mail selezionata nella vista
 	 */
@@ -99,7 +95,7 @@ public class MainWindowController {
 
 		selectedEmail = email;
 
-		if(mouseClick.getClickCount() == 2)
+		if (mouseClick.getClickCount() == 2)
 			updateDetailView(email);
 	}
 
@@ -116,7 +112,7 @@ public class MainWindowController {
 		}
 	}
 
-	/*
+	/**
 	 * When a write button is clicked it changes controller and fxml file to
 	 * NewMessageController and newMessageController.fxml.
 	 * This method pass a Boolean value to NewMessageController class.
@@ -124,11 +120,10 @@ public class MainWindowController {
 	 * an email forwarding.
 	 */
 	public void handleWriteButton(MouseEvent mouseEvent) throws IOException {
-		FXMLLoader loader = new FXMLLoader((ClientMain.class.getResource("newMessage.fxml"))) ;
+		FXMLLoader loader = new FXMLLoader((ClientMain.class.getResource("newMessage.fxml")));
 		Parent root = (Parent) loader.load();
-
 		NewMessageController newMsgController = loader.getController();
-		newMsgController.initialize(true, model);
+		newMsgController.initialize(true, model, selectedEmail);
 
 		Scene scene = new Scene(root);
 		Stage stage = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
@@ -137,20 +132,32 @@ public class MainWindowController {
 		stage.show();
 	}
 
-	/*
+	/**
 	 * When a reply button or replyAll are clicked it changes controller
 	 * and fxml file to ReplyController and reply.fxml.
 	 */
 	public void handleRepliesButton(MouseEvent mouseEvent) throws IOException {
-		Parent root = FXMLLoader.load(Objects.requireNonNull(ClientMain.class.getResource("reply.fxml"))) ;
-		Scene scene = new Scene(root);
-		Stage stage = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
-		stage.setTitle("Rispondi al messaggio");
-		stage.setScene(scene);
-		stage.show();
+		if (selectedEmail == null)
+			errorDialog();
+		else {
+			FXMLLoader loader = new FXMLLoader((ClientMain.class.getResource("reply.fxml")));
+			Parent root = (Parent) loader.load();
+			ReplyController newReplyController = loader.getController();
+			Button b = (Button) mouseEvent.getSource();
+			if (b.getId().equals("reply"))
+				newReplyController.initialize(false, model, selectedEmail);
+			else
+				newReplyController.initialize(true, model, selectedEmail);
+
+			Scene scene = new Scene(root);
+			Stage stage = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
+			stage.setTitle("Rispondi al messaggio");
+			stage.setScene(scene);
+			stage.show();
+		}
 	}
 
-	/*
+	/**
 	 * When a forward button is clicked it changes controller and fxml file
 	 * to NewMessageController and newMessage.fxml.
 	 * This method pass a Boolean value to NewMessageController class.
@@ -158,25 +165,52 @@ public class MainWindowController {
 	 * an email forwarding.
 	 */
 	public void handleForwardButton(MouseEvent mouseEvent) throws IOException {
-		FXMLLoader loader = new FXMLLoader((ClientMain.class.getResource("newMessage.fxml"))) ;
-		Parent root = (Parent) loader.load();
+		if (selectedEmail == null)
+			errorDialog();
+		else {
+			FXMLLoader loader = new FXMLLoader((ClientMain.class.getResource("newMessage.fxml")));
+			Parent root = (Parent) loader.load();
 
-		NewMessageController newMsgController = loader.getController();
-		newMsgController.initialize(false, model);
+			NewMessageController newMsgController = loader.getController();
+			newMsgController.initialize(false, model, selectedEmail);
 
-		Scene scene = new Scene(root);
-		Stage stage = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
-		stage.setTitle("Inoltra mail");
-		stage.setScene(scene);
-		stage.show();
+			Scene scene = new Scene(root);
+			Stage stage = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
+			stage.setTitle("Inoltra mail");
+			stage.setScene(scene);
+			stage.show();
+		}
 	}
 
-	/*
+	/**
 	 * When delete button is clicked the email that is open is deleted.
 	 */
 	public void handleDeleteButton(MouseEvent mouseEvent) {
-		System.out.println("delete button is clicked --> it should delete the open email");
-		//model.deleteEmail(selectedEmail);
-		//updateDetailView(emptyEmail);
+		if (selectedEmail == null)
+			errorDialog();
+		else if (confirmDialog()) {
+			System.out.println("delete button is clicked --> it should delete the open email");
+			//model.deleteEmail(selectedEmail);
+			//updateDetailView(emptyEmail);
+		}
+	}
+
+	/**
+	 * Error dialog.
+	 */
+	private void errorDialog() {
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		alert.setHeaderText("Seleziona una mail prima di proseguire");
+		alert.showAndWait();
+	}
+
+	/**
+	 * Confirmation dialog.
+	 */
+	private boolean confirmDialog() {
+		Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.NO);
+		alert.setHeaderText("Sei sicuro di voler eliminare la mail selezionata?");
+		alert.showAndWait();
+		return alert.getResult() == ButtonType.YES;
 	}
 }

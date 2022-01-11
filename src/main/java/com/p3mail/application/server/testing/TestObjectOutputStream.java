@@ -33,7 +33,7 @@ public class TestObjectOutputStream {
                 Random r = new Random();
                 Email email = new Email(
                         people[r.nextInt(people.length)],
-                        List.of(people[r.nextInt(people.length)]),
+                        List.of(people[r.nextInt(people.length)],people[r.nextInt(people.length)]),
                         objects[r.nextInt(objects.length)],
                         texts[r.nextInt(texts.length)]);
 
