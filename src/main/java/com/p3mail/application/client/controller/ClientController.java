@@ -129,7 +129,7 @@ public class ClientController {
             try {
                 Email emailToSend = new Email(
                         model.emailAddressProperty().get(),
-                        List.of("af@unito.it", "mc@unito.it", "ff@unito.it"),
+                        List.of("aef@unito.it", "mc@unito.it", "ff@unito.it"),
                         "Mail spedita dal client",
                         "Spero tutto funzioni, W la vita!!");
                 System.out.println("You want to send the email: "); //debug purpose

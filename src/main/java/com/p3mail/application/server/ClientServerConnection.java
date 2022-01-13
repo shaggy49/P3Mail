@@ -91,21 +91,25 @@ public class ClientServerConnection implements Runnable {
                         List<String> receivers = emailSended.getReceivers();
                         System.out.println("receive a send request for receivers : " + receivers);
                         //TODO: check receivers if well formed (@ and .)
-                        if(!registeredClients.getRegisteredMails().containsAll(receivers))
+                        if(!registeredClients.getRegisteredMails().containsAll(receivers)){
+                            System.out.println("some emails are not registered!");
                             out.writeObject(new MailNotFoundException());
-                        for (String receiver : receivers) {
-                            synchronized (clients) { //not sure if "this" or "clients" are correct
-                                int indexOfLastEmail = getIndexOfLastEmailForAccount(receiver);
-                                addEmailToInboxOf(emailSended, receiver, indexOfLastEmail);
-                                updateIndexOfLastEmailForAccount(receiver, indexOfLastEmail);
-                            }
                         }
-                        System.out.println("email correctly stored!");
-                        //TODO: notify all connected receivers
+                        else {
+                            for (String receiver : receivers) {
+                                synchronized (clients) { //not sure if "this" or "clients" are correct
+                                    int indexOfLastEmail = getIndexOfLastEmailForAccount(receiver);
+                                    addEmailToInboxOf(emailSended, receiver, indexOfLastEmail);
+                                    updateIndexOfLastEmailForAccount(receiver, indexOfLastEmail);
+                                }
+                            }
+                            System.out.println("email correctly stored!");
+                            //TODO: notify all connected receivers
 //                        notifyConnectedReceiver(receivers);
-                        System.out.println("about to send notifications to connected client: " + receivers);
-                        out.writeObject(new SendResponse());
-                        //notifyClients
+                            System.out.println("about to send notifications to connected client: " + receivers);
+                            out.writeObject(new SendResponse());
+                            //notifyClients
+                        }
                     }
                     //else if socket input type of richiesta di invio => inviaMail()
                     //else error ed esci
