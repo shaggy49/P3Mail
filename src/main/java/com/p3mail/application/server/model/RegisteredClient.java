@@ -1,7 +1,5 @@
 package com.p3mail.application.server.model;
 
-import com.p3mail.application.server.model.MailAccount;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +15,20 @@ public class RegisteredClient {
 
     public List<MailAccount> getRegisteredUser() {
         return registeredUser;
+    }
+
+    public List<String> getNameRegisteredUser() {
+        return registeredUser
+                .stream()
+                .map(MailAccount::getName)
+                .toList();
+    }
+
+    public List<String> getSurnameRegisteredUser() {
+        return registeredUser
+                .stream()
+                .map(MailAccount::getSurname)
+                .toList();
     }
 
     public List<String> getRegisteredMails() {

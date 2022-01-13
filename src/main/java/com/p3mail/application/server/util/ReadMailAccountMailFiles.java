@@ -25,6 +25,7 @@ public class ReadMailAccountMailFiles {
                 else {
                     System.exit(1);
                 }
+                System.out.println("Emails:");
                 for (int i = 0; i < 10; i++) {
                     String path = String.format("." + File.separator + "server" + File.separator + account +  File.separator + "email_%d.dat", i);
                     File file = new File(path);
@@ -36,6 +37,13 @@ public class ReadMailAccountMailFiles {
                     System.out.println(email.classictoString());
 
                 }
+                String path = String.format("." + File.separator + "server" + File.separator + account +  File.separator + "info.dat");
+                File file = new File(path);
+                FileInputStream fos = new FileInputStream(file);
+                ObjectInputStream inputStream = new ObjectInputStream(fos);
+
+                Integer infoValue = (Integer) inputStream.readObject();
+                System.out.println("Info file value: " + infoValue);
                 System.out.println();
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();

@@ -23,9 +23,10 @@ public class Email implements Serializable {
     /**
      * Costruttore della classe.
      *
+     * @param id         email id
      * @param sender     email del mittente
      * @param receivers  emails dei destinatari
-     * @param object    oggetto della mail
+     * @param object     oggetto della mail
      * @param text       testo della mail
      */
 

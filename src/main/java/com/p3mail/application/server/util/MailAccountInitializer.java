@@ -16,29 +16,41 @@ import org.apache.commons.io.FileUtils;
 * degli utenti
 * */
 public class MailAccountInitializer {
+
+    public static final int INITIAL_MAIL_NUMBER = 10;
+
     public static void main(String[] args) {
 
-        List<String> registeredMailAccounts = new RegisteredClient().getRegisteredMails();
-        String[] people = new String[] {"Paolo", "Alessandro", "Enrico", "Giulia", "Gaia", "Simone"};
+        RegisteredClient registeredClient = new RegisteredClient();
+        List<String> registeredMailAccounts = registeredClient.getRegisteredMails();
         String[] objects = new String[] {
-                "Importante", "A proposito della nostra ultima conversazione", "Tanto va la gatta al lardo",
-                "Non dimenticare...", "Domani scuola" };
+                "Importante", "Mi sono dimenticato", "Allegato busta paga",
+                "Urgente!", "Domani scuola", "Lista spesa", "Resoconto scolastico", "Pagella secondo anno", "Votazione esame programmazione III" };
         String[] texts = new String[] {
                 "È necessario che ci parliamo di persona, per mail rischiamo sempre fraintendimenti",
                 "Ricordati di comprare il latte tornando a casa",
                 "L'appuntamento è per domani alle 9, ci vediamo al solito posto",
-                "Ho sempre pensato valesse 42, tu sai di cosa parlo"
+                "Ho sempre pensato valesse 42, tu sai di cosa parlo",
+                "Alla fine all'esame di programmazione III ho preso 30",
+                "Ma sei riuscito a passare l'esame di guida?",
+                "L'ultima volta che ci siamo visti mi sa che ho dimenticato le chiavi da te",
+                "Ci siete domani su discord?",
+                "Va bene, fammi sapere",
+                "Ce l'abbiamo fatta!!"
         };
 
         try {
             FileUtils.deleteDirectory(new File("." + File.separator + "server"));
+
             for (String account : registeredMailAccounts) {
-                for (int i = 0; i < 10; i++) {
+                ObjectOutputStream outputStream = null;
+                int i;
+                for (i = 0; i < INITIAL_MAIL_NUMBER; i++) {
                     Random r = new Random();
                     Email email = new Email(
                             i,
-                            people[r.nextInt(people.length)],
-                            List.of(people[r.nextInt(people.length)]),
+                            registeredMailAccounts.get(r.nextInt(registeredMailAccounts.size())),
+                            List.of(account),
                             objects[r.nextInt(objects.length)],
                             texts[r.nextInt(texts.length)]);
 
@@ -47,15 +59,28 @@ public class MailAccountInitializer {
                     file.getParentFile().mkdirs();
                     file.createNewFile();
                     FileOutputStream fos = new FileOutputStream(file);
-                    ObjectOutputStream outputStream = new ObjectOutputStream(fos);
+                    outputStream = new ObjectOutputStream(fos);
 
                     outputStream.writeObject(email);
 
+                }
+
+                String path = String.format("." + File.separator + "server" + File.separator + account + File.separator + "info.dat");
+
+                File file = new File(path);
+
+                FileOutputStream fos = new FileOutputStream(file);
+                outputStream = new ObjectOutputStream(fos);
+
+                outputStream.writeObject(i);
+
+                if(outputStream != null) {
                     outputStream.close();
                 }
             }
 
-            System.out.println("Generated random email files, check server folder");
+
+            System.out.println("Generated random email and info files, check server folder");
 
         } catch (IOException e) {
             e.printStackTrace();
