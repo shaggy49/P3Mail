@@ -6,6 +6,7 @@ import com.p3mail.application.connection.request.DeleteRequest;
 import com.p3mail.application.connection.request.DisconnectRequest;
 import com.p3mail.application.connection.request.TriggerServerRequest;
 import com.p3mail.application.connection.NewEmailNotification;
+import com.p3mail.application.connection.response.DeleteResponse;
 import com.p3mail.application.server.model.RegisteredClient;
 import com.p3mail.application.connection.MailNotFoundException;
 
@@ -75,7 +76,11 @@ public class ClientServerConnection implements Runnable {
                     else if (request instanceof DeleteRequest) {
                         int emailId = ((DeleteRequest) request).getEmailId();
                         boolean result = deleteEmailWithId(emailId);
-                        out.writeObject(result);
+                        DeleteResponse response = new DeleteResponse(result);
+                        if(!result) {
+                            response.setErrorMessage("email already deleted");
+                        }
+                        out.writeObject(response);
                     }
                     else if (request instanceof TriggerServerRequest) {
                         notifyAllConnectedClients();
@@ -110,13 +115,12 @@ public class ClientServerConnection implements Runnable {
     }
 
     private boolean deleteEmailWithId(int emailId) {
-        boolean result;
+        boolean result = false;
         String path = String.format("." + File.separator + "server" + File.separator + userEmailAddress +  File.separator + "email_%d.dat", emailId);
         File file = new File(path);
         try {
             result = Files.deleteIfExists(file.toPath());
         } catch (IOException e) {
-            result = false;
             e.printStackTrace();
         }
         return result;

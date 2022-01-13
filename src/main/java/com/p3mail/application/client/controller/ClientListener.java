@@ -3,6 +3,7 @@ package com.p3mail.application.client.controller;
 import com.p3mail.application.connection.MailNotFoundException;
 import com.p3mail.application.connection.model.Email;
 import com.p3mail.application.connection.NewEmailNotification;
+import com.p3mail.application.connection.response.DeleteResponse;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 
@@ -41,10 +42,22 @@ public class ClientListener implements Runnable{
                         controller.addEmailToInbox(email);
                     }
                 }
-                else if (serverResponse instanceof Boolean) {
-                    Boolean result = (Boolean) serverResponse;
+                else if (serverResponse instanceof DeleteResponse) {
+                    DeleteResponse response = (DeleteResponse) serverResponse;
+                    boolean result = response.isResult();
                     if(result) {
-                        controller.deleteAndUpdateView();
+                        Platform.runLater(() -> {
+                            controller.deleteAndUpdateView();
+                        });
+                    }
+                    else if (!response.equals("")) {
+                        Platform.runLater(() -> {
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setTitle("Error");
+                            alert.setHeaderText(response.getErrorMessage());
+                            alert.show();
+                            controller.deleteAndUpdateView();
+                        });
                     }
                     else {
                         Platform.runLater(() -> {
