@@ -66,13 +66,18 @@
 							<bottom>
 								<HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
 									<children>
-										<Button fx:id="addEmailButton" mnemonicParsing="false" onMouseClicked="#onAddButtonClick" text="NotifyAllConnected">
+										<Button fx:id="notifyButton" mnemonicParsing="false" onMouseClicked="#onNotifyButtonClick" text="NotifyAllConnected">
 											<HBox.margin>
-												<Insets left="120.0" />
+												<Insets left="30.0" />
 											</HBox.margin></Button>
+                              <Button fx:id="sendEmailButton" mnemonicParsing="false" onMouseClicked="#onSendButtonClick" text="Send mail">
+                                 <HBox.margin>
+                                    <Insets left="60.0" />
+                                 </HBox.margin>
+                              </Button>
 										<Button fx:id="deleteEmailButton" mnemonicParsing="false" onMouseClicked="#onDeleteButtonClick" text="Delete">
 											<HBox.margin>
-												<Insets left="100.0" />
+												<Insets left="60.0" />
 											</HBox.margin></Button>
 									</children>
 								</HBox>

@@ -20,6 +20,14 @@ public class Email implements Serializable {
 
     private Email() {}
 
+    public Email(String sender, List<String> receivers, String object, String text) {
+        this.sender = sender;
+        this.receivers = receivers;
+        this.object = object;
+        this.text = text;
+        this.date = new Date();
+    }
+
     /**
      * Costruttore della classe.
      *
@@ -32,7 +40,7 @@ public class Email implements Serializable {
 
 
     /*
-        Da aggiungere il controllo che il sender abbia una @ seguita da un .
+        TODO: Da aggiungere il controllo che il sender e i receiver abbiano una @ seguita da un .
      */
     public Email(int id, String sender, List<String> receivers, String object, String text) {
         this.id = id;

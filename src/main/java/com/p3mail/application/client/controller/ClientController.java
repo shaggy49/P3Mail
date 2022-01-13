@@ -4,6 +4,7 @@ import com.p3mail.application.client.model.Client;
 import com.p3mail.application.connection.model.Email;
 import com.p3mail.application.connection.request.DeleteRequest;
 import com.p3mail.application.connection.request.DisconnectRequest;
+import com.p3mail.application.connection.request.SendRequest;
 import com.p3mail.application.connection.request.TriggerServerRequest;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -39,7 +40,10 @@ public class ClientController {
     private ListView<Email> lstEmails;
 
     @FXML
-    public Button addEmailButton;
+    public Button notifyButton;
+
+    @FXML
+    public Button sendEmailButton;
 
     @FXML
     public Button deleteEmailButton;
@@ -53,7 +57,7 @@ public class ClientController {
         if (this.model != null)
             throw new IllegalStateException("Model can only be initialized once");
         //istanza nuovo client
-        model = new Client("Federico", "Ferreri", "ff@unito.it");
+        model = new Client("Federico", "Ferreri", "mc@unito.it");
 
         selectedEmail = null;
 
@@ -113,10 +117,34 @@ public class ClientController {
      * Aggiunge una mail alla lista
      */
     @FXML
-    protected void onAddButtonClick() throws IOException {
+    protected void onNotifyButtonClick() throws IOException {
         out.writeObject(new TriggerServerRequest());
     }
 
+
+    @FXML
+    public void onSendButtonClick(MouseEvent mouseClick) {
+        //creo una mail fittizia giusto per vedere se funziona (i dati verrano catchati dai form GUI)
+        if(socketConnection != null) {
+            try {
+                Email emailToSend = new Email(
+                        model.emailAddressProperty().get(),
+                        List.of("af@unito.it", "mc@unito.it", "ff@unito.it"),
+                        "Mail spedita dal client",
+                        "Spero tutto funzioni, W la vita!!");
+                System.out.println("You want to send the email: "); //debug purpose
+                System.out.println(emailToSend);
+                out.writeObject(new SendRequest(emailToSend));
+            } catch (IOException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("The server doesn't seem connected!");
+                alert.show();
+                e.printStackTrace();
+            }
+
+        }
+    }
 
     /**
      * Elimina la mail selezionata

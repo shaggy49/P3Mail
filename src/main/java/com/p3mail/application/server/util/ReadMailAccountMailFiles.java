@@ -3,6 +3,7 @@ package com.p3mail.application.server.util;
 import com.p3mail.application.connection.model.Email;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.Scanner;
 
 /*
@@ -26,9 +27,11 @@ public class ReadMailAccountMailFiles {
                     System.exit(1);
                 }
                 System.out.println("Emails:");
-                for (int i = 0; i < 10; i++) {
-                    String path = String.format("." + File.separator + "server" + File.separator + account +  File.separator + "email_%d.dat", i);
-                    File file = new File(path);
+                String pathToUser = "." + File.separator + "server" + File.separator + account;
+                File directoryPath = new File(pathToUser);
+                String[] userEmails = directoryPath.list((dir, name) -> name.contains("email_"));
+                for (String userEmail : userEmails) {
+                    File file = new File(pathToUser + File.separator + userEmail);
                     FileInputStream fos = new FileInputStream(file);
                     ObjectInputStream inputStream = new ObjectInputStream(fos);
 
@@ -37,7 +40,7 @@ public class ReadMailAccountMailFiles {
                     System.out.println(email.classictoString());
 
                 }
-                String path = String.format("." + File.separator + "server" + File.separator + account +  File.separator + "info.dat");
+                String path = "." + File.separator + "server" + File.separator + account + File.separator + "info.dat";
                 File file = new File(path);
                 FileInputStream fos = new FileInputStream(file);
                 ObjectInputStream inputStream = new ObjectInputStream(fos);

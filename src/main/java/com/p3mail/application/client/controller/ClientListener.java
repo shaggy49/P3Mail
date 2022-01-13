@@ -4,6 +4,7 @@ import com.p3mail.application.connection.MailNotFoundException;
 import com.p3mail.application.connection.model.Email;
 import com.p3mail.application.connection.NewEmailNotification;
 import com.p3mail.application.connection.response.DeleteResponse;
+import com.p3mail.application.connection.response.SendResponse;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 
@@ -68,12 +69,20 @@ public class ClientListener implements Runnable{
                         });
                     }
                 }
+                else if (serverResponse instanceof SendResponse) {
+                    Platform.runLater(() -> {
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Success");
+                        alert.setHeaderText("Email correctly sent ");
+                        alert.show();
+                    });
+                }
                 else if (serverResponse instanceof NewEmailNotification) {
                     String emailAddress = ((NewEmailNotification) serverResponse).getFromEmailAddress();
                     Platform.runLater(() -> {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("Notification");
-                        alert.setHeaderText("Something arrived from " + emailAddress);
+                        alert.setHeaderText("A new mail arrived from " + emailAddress);
                         alert.show();
                     });
                     //metodo del controller che aggiunge la mail all'inbox in real time
