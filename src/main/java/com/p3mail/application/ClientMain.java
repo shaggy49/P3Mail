@@ -1,5 +1,6 @@
 package com.p3mail.application;
 
+import com.p3mail.application.client.controller.ClientController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -11,6 +12,7 @@ import java.util.Objects;
 
 public class ClientMain extends Application {
 
+
     @Override
     public void start(Stage stage) throws IOException {
         //FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("login.fxml"));
@@ -20,6 +22,13 @@ public class ClientMain extends Application {
         stage.setTitle("Email client");
         stage.setScene(scene);
         stage.show();
+    }
+
+    @Override
+    public void stop() throws Exception {
+        ClientController clientController = (ClientController) fxmlLoader.getController();
+        clientController.closeSocketConnection();
+        super.stop();
     }
 
     public static void main(String[] args) {

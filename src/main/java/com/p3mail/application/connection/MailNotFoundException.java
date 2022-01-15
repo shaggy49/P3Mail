@@ -1,4 +1,4 @@
-package com.p3mail.application.server;
+package com.p3mail.application.connection;
 
 import java.io.Serializable;
 

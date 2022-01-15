@@ -1,8 +1,11 @@
 package com.p3mail.application.client.controller;
 
 import com.p3mail.application.client.model.Client;
-import com.p3mail.application.client.model.Email;
-import com.p3mail.application.server.MailNotFoundException;
+import com.p3mail.application.connection.model.Email;
+import com.p3mail.application.connection.request.DeleteRequest;
+import com.p3mail.application.connection.request.DisconnectRequest;
+import com.p3mail.application.connection.request.SendRequest;
+import com.p3mail.application.connection.request.TriggerServerRequest;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
@@ -12,146 +15,188 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.List;
 
-/**
- * Classe Controller
- */
-
 public class ClientController {
-	Socket s = null;
 
-	@FXML
-	private Label lblFrom;
+    Socket socketConnection = null;
 
-	@FXML
-	private Label lblTo;
+    ObjectOutputStream out = null;
 
-	@FXML
-	private Label lblObject;
+    @FXML
+    private Label lblFrom;
 
-	@FXML
-	private Label lblEmailAddress;
+    @FXML
+    private Label lblTo;
 
-	@FXML
-	private TextArea txtEmailContent;
+    @FXML
+    private Label lblObject;
 
-	@FXML
-	private ListView<Email> lstEmails;
+    @FXML
+    private Label lblEmailAddress;
 
-	@FXML
-	public Button addEmailButton;
+    @FXML
+    private TextArea txtEmailContent;
 
-	@FXML
-	public Button deleteEmailButton;
+    @FXML
+    private ListView<Email> lstEmails;
 
-	private Client model;
-	private Email selectedEmail;
-	private Email emptyEmail;
+    @FXML
+    public Button notifyButton;
 
-	@FXML
-	public void initialize() {
-		if (this.model != null)
-			throw new IllegalStateException("Model can only be initialized once");
-		//istanza nuovo client
-		model = new Client("Federico", "Ferreri", "ff@unito.it");
+    @FXML
+    public Button sendEmailButton;
 
-		selectedEmail = null;
+    @FXML
+    public Button deleteEmailButton;
 
-		//binding tra lstEmails e inboxProperty
-		lstEmails.itemsProperty().bind(model.inboxProperty());
-		lblEmailAddress.textProperty().bind(model.emailAddressProperty());
+    private Client model;
+    private Email selectedEmail;
+    private Email emptyEmail;
 
-		try {
-			connectWithServer();
-			Alert mailSuccessAlert = new Alert(Alert.AlertType.INFORMATION);
-			mailSuccessAlert.setTitle("Success");
-			mailSuccessAlert.setHeaderText("You entered a valid mail address!");
-			mailSuccessAlert.show();
-		} catch (MailNotFoundException e) {
-			Alert mailErrorAlert = new Alert(Alert.AlertType.ERROR);
-			mailErrorAlert.setTitle("Error");
-			mailErrorAlert.setHeaderText(e.getMessage());
-			mailErrorAlert.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setTitle("Error");
-			alert.setHeaderText("Connection failed");
-			alert.show();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+    @FXML
+    public void initialize(){
+        if (this.model != null)
+            throw new IllegalStateException("Model can only be initialized once");
+        //istanza nuovo client
+        model = new Client("Federico", "Ferreri", "ff@unito.it");
 
-		emptyEmail = new Email("", List.of(""), "", "");
+        selectedEmail = null;
 
-		updateDetailView(emptyEmail);
-	}
+        //binding tra lstEmails e inboxProperty
+        lstEmails.itemsProperty().bind(model.inboxProperty());
+        lblEmailAddress.textProperty().bind(model.emailAddressProperty());
 
-	public void connectWithServer() throws MailNotFoundException, IOException, ClassNotFoundException {
-		String nomeHost = InetAddress.getLocalHost().getHostName();
-		System.out.println(nomeHost);
-		s = new Socket(nomeHost, 8189);
-		System.out.println("Connection established!");
-		InputStream inStream = s.getInputStream();
-		OutputStream outStream = s.getOutputStream();
-//            Scanner in = new Scanner(inStream);
-		ObjectInputStream in = new ObjectInputStream(inStream);
-		PrintWriter out = new PrintWriter(outStream, true);
-		out.println(model.emailAddressProperty().get());
-		System.out.println("Ho spedito il messaggio al socket");
+        try {
+            connectWithServer();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Connection failed");
+            alert.show();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
 
-		Object serverResponse = in.readObject();
-		if (serverResponse instanceof MailNotFoundException) {
-			throw new MailNotFoundException();
-		} else {
-			List<Email> userEMail = (List<Email>) serverResponse;
-			for (Email email : userEMail) {
-				model.addEmail(email);
-			}
-		}
-		s.close();
-	}
+        emptyEmail = new Email(0, "", List.of(""), "", "");
 
-	/**
-	 * Aggiunge una mail alla lista
-	 */
-	@FXML
-	protected void onAddButtonClick() {
-		model.addEmail(selectedEmail);
-		updateDetailView(emptyEmail);
-	}
+        updateDetailView(emptyEmail);
+    }
 
-	/**
-	 * Elimina la mail selezionata
-	 */
-	@FXML
-	protected void onDeleteButtonClick() {
-		model.deleteEmail(selectedEmail);
-		updateDetailView(emptyEmail);
-	}
+    private void connectWithServer() throws IOException, ClassNotFoundException {
+        String nomeHost = InetAddress.getLocalHost().getHostName();
+        System.out.println(nomeHost);
+        socketConnection = new Socket(nomeHost, 8189);
+        System.out.println("Connection established!");
+        OutputStream socketOutputStream = socketConnection.getOutputStream();
 
-	/**
-	 * Mostra la mail selezionata nella vista
-	 */
-	@FXML
-	protected void showSelectedEmail(MouseEvent mouseClick) {
-		Email email = lstEmails.getSelectionModel().getSelectedItem();
 
-		selectedEmail = email;
+        out = new ObjectOutputStream(socketOutputStream);
+        out.writeObject(model.emailAddressProperty().get());
+        System.out.println("I send my mail address to the server");
 
-		if (mouseClick.getClickCount() == 2)
-			updateDetailView(email);
-	}
+        ClientListener clientListener = new ClientListener(this, socketConnection);
+        new Thread(clientListener).start();
 
-	/**
-	 * Aggiorna la vista con la mail selezionata
-	 */
-	protected void updateDetailView(Email email) {
-		if (email != null) {
-			lblFrom.setText(email.getSender());
-			lblTo.setText(String.join(", ", email.getReceivers()));
-			lblObject.setText(email.getObject());
-			txtEmailContent.setText(email.getText());
-		}
-	}
+    }
+
+    public void closeSocketConnection() {
+        try {
+            if(out != null) {
+                out.writeObject(new DisconnectRequest());
+            }
+            if(socketConnection != null) {
+                socketConnection.close();
+                System.out.println("Connessione terminata");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Aggiunge una mail alla lista
+     */
+//    @FXML
+//    protected void onNotifyButtonClick() throws IOException {
+//        out.writeObject(new TriggerServerRequest());
+//    }
+
+
+    @FXML
+    public void onSendButtonClick(MouseEvent mouseClick) {
+        //creo una mail fittizia giusto per vedere se funziona (i dati verrano catchati dai form GUI)
+        if(socketConnection != null) {
+            try {
+                Email emailToSend = new Email(
+                        model.emailAddressProperty().get(),
+                        List.of("mc@unito.it", "ff@unito.it"),
+                        "Mail spedita dal client",
+                        "Spero tutto funzioni, W la vita!!");
+                System.out.println("You want to send the email: "); //debug purpose
+                System.out.println(emailToSend);
+                out.writeObject(new SendRequest(emailToSend));
+            } catch (IOException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("The server doesn't seem connected!");
+                alert.show();
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    /**
+     * Elimina la mail selezionata
+     */
+    @FXML
+    protected void onDeleteButtonClick() {
+        System.out.println("You want to delete the email with id = " + selectedEmail.getId()); //debug purpose
+        if(socketConnection != null) {
+            try {
+                out.writeObject(new DeleteRequest(selectedEmail.getId()));
+            } catch (IOException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("The server doesn't seem connected!");
+                alert.show();
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void addEmailToInbox(Email email) {
+        model.addEmail(email);
+    }
+
+    public void deleteAndUpdateView() {
+        model.deleteEmail(selectedEmail); //do this only if server says that all works fine!
+        updateDetailView(emptyEmail);
+    }
+
+    /**
+     * Mostra la mail selezionata nella vista
+     */
+     @FXML
+    protected void showSelectedEmail(MouseEvent mouseClick) {
+        Email email = lstEmails.getSelectionModel().getSelectedItem();
+
+        selectedEmail = email;
+
+        if(mouseClick.getClickCount() == 2)
+            updateDetailView(email);
+    }
+
+     /**
+     * Aggiorna la vista con la mail selezionata
+     */
+    protected void updateDetailView(Email email) {
+        if(email != null) {
+            lblFrom.setText(email.getSender());
+            lblTo.setText(String.join(", ", email.getReceivers()));
+            lblObject.setText(email.getObject());
+            txtEmailContent.setText(email.getText());
+        }
+    }
 
 }
