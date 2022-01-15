@@ -237,3 +237,4 @@ buildNumber.properties
 
 src/main/webapp/WEB-INF/web.xml
 /p3mail.iml
+/server/*.dat

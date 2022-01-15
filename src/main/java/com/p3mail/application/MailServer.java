@@ -33,14 +33,6 @@ public class MailServer extends Application {
 
 		tc = new ThreadConnection();
 		tc.start();
-
-//		stage.setOnCloseRequest(event -> {
-//			try {
-//				s.close();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		});
 	}
 
 	@Override
