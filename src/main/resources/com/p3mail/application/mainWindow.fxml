@@ -23,14 +23,7 @@
 									<children>
 										<HBox prefHeight="100.0" prefWidth="200.0">
 											<children>
-												<Label fx:id="lblName" prefHeight="17.0" prefWidth="66.0" text="Nome " textFill="WHITE">
-													<HBox.margin>
-														<Insets bottom="5.0" left="10.0" />
-													</HBox.margin>
-													<font>
-														<Font name="Arial" size="13.0" />
-													</font></Label>
-												<Label fx:id="lblSurname" prefHeight="33.0" prefWidth="84.0" text="Cognome" textFill="WHITE">
+												<Label fx:id="lblNameAndSurname" prefHeight="16.0" prefWidth="144.0" text="Nome " textFill="WHITE">
 													<HBox.margin>
 														<Insets bottom="5.0" left="10.0" />
 													</HBox.margin>

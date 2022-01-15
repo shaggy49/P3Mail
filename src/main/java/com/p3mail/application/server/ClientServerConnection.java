@@ -2,7 +2,8 @@ package com.p3mail.application.server;
 
 import com.p3mail.application.connection.model.Email;
 import com.p3mail.application.connection.request.*;
-import com.p3mail.application.connection.NewEmailNotification;
+import com.p3mail.application.connection.response.DeleteEmailNotification;
+import com.p3mail.application.connection.response.NewEmailNotification;
 import com.p3mail.application.connection.response.DeleteResponse;
 import com.p3mail.application.connection.response.SendResponse;
 import com.p3mail.application.server.model.RegisteredClient;
@@ -72,14 +73,15 @@ public class ClientServerConnection implements Runnable {
                         break;
                     }
                     else if (request instanceof DeleteRequest) {
-                        int emailId = ((DeleteRequest) request).getEmailId();
-                        System.out.println("receive a delete request for email: $" + emailId);
+                        Email emailToDelete = ((DeleteRequest) request).getEmailToDelete();
+                        int emailId = emailToDelete.getId();
+                        System.out.println("receive a delete request for email: {" + emailToDelete + "}");
                         boolean result = deleteEmailWithId(emailId);
                         DeleteResponse response = new DeleteResponse(result);
-                        if(!result) {
-                            response.setErrorMessage("email already deleted");
+                        System.out.println("email: {" + emailToDelete + "} deleted");
+                        if(result) {
+                            notifyConnectedReceiversForNewDeletedEmail(emailToDelete);
                         }
-                        System.out.println("email: $" + emailId + " deleted");
                         out.writeObject(response);
                     }
 //                    else if (request instanceof TriggerServerRequest) {
@@ -102,7 +104,7 @@ public class ClientServerConnection implements Runnable {
                             }
                             System.out.println("email correctly stored!");
                             System.out.println("about to send notifications to connected client: " + receivers);
-                            notifyConnectedReceivers(emailSended);
+                            notifyConnectedReceiversForNewMailMessage(emailSended);
                             out.writeObject(new SendResponse());
                         }
                     }
@@ -126,13 +128,20 @@ public class ClientServerConnection implements Runnable {
         }
     }
 
-    private void notifyConnectedReceivers(Email email) throws IOException {
+    private void notifyConnectedReceiversForNewMailMessage(Email email) throws IOException {
         List<String> receivers = email.getReceivers();
         for (ClientServerConnection connectedClient : clients) {
             for (String receiver : receivers) {
                 if(connectedClient.userEmailAddress.equals(receiver))
                     connectedClient.out.writeObject(new NewEmailNotification(email));
             }
+        }
+    }
+
+    private void notifyConnectedReceiversForNewDeletedEmail(Email email) throws IOException {
+        for (ClientServerConnection connectedClient : clients) {
+            if(connectedClient.userEmailAddress.equals(userEmailAddress))
+                connectedClient.out.writeObject(new DeleteEmailNotification(email));
         }
     }
 

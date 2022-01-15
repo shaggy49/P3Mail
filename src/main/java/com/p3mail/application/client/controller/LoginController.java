@@ -49,8 +49,6 @@ public class LoginController {
 	private void handleRadioButton(MouseEvent mouseEvent) throws IOException {
 		RadioButton rb = (RadioButton) mouseEvent.getSource();
 		if(mouseEvent.getClickCount() == 2) {
-			if (this.model != null)
-				throw new IllegalStateException("Model can only be initialized once");
 
 			if (rb.getId().equals("accountFf")){
 				//istanza nuovo client
@@ -66,8 +64,8 @@ public class LoginController {
 			} catch (IOException e) {
 				e.printStackTrace();
 				Alert alert = new Alert(Alert.AlertType.ERROR);
-				alert.setTitle("Error");
-				alert.setHeaderText("Connection failed");
+				alert.setTitle("Errore");
+				alert.setHeaderText("Sembra ci sia un problema col server..");
 				alert.show();
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();

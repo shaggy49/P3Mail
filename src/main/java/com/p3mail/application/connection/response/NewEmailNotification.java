@@ -1,4 +1,4 @@
-package com.p3mail.application.connection;
+package com.p3mail.application.connection.response;
 
 import com.p3mail.application.connection.model.Email;
 import com.p3mail.application.connection.response.ServerResponse;

@@ -1,14 +1,16 @@
 package com.p3mail.application.connection.request;
 
+import com.p3mail.application.connection.model.Email;
+
 public class DeleteRequest extends ClientRequest{
+    private Email emailToDelete;
 
-    private int emailId;
-
-    public DeleteRequest(int emailId) {
-        this.emailId = emailId;
+    public DeleteRequest(Email emailToDelete) {
+        this.emailToDelete = emailToDelete;
     }
 
-    public int getEmailId() {
-        return emailId;
+    public Email getEmailToDelete() {
+        return emailToDelete;
     }
+
 }

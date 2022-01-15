@@ -76,5 +76,9 @@ public class Client {
         inboxContent.remove(email);
     }
 
+    public void deleteEmail(int id) {
+        inboxContent.removeIf(email1 -> email1.getId() == id);
+    }
+
 }
 

@@ -3,7 +3,8 @@ package com.p3mail.application.client;
 import com.p3mail.application.client.controller.MainWindowController;
 import com.p3mail.application.connection.MailNotFoundException;
 import com.p3mail.application.connection.model.Email;
-import com.p3mail.application.connection.NewEmailNotification;
+import com.p3mail.application.connection.response.DeleteEmailNotification;
+import com.p3mail.application.connection.response.NewEmailNotification;
 import com.p3mail.application.connection.response.DeleteResponse;
 import com.p3mail.application.connection.response.SendResponse;
 import javafx.application.Platform;
@@ -33,8 +34,8 @@ public class ClientListener implements Runnable{
                 if(serverResponse instanceof MailNotFoundException){
                     Platform.runLater(() -> {
                         Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("Error");
-                        alert.setHeaderText("The emailAddress is not registered!");
+                        alert.setTitle("Errore");
+                        alert.setHeaderText("L'indirizzo mail non è registrato");
                         alert.show();
                     });
                 }
@@ -54,15 +55,6 @@ public class ClientListener implements Runnable{
                             controller.deleteAndUpdateView();
                         });
                     }
-                    else if (!response.equals("")) {
-                        Platform.runLater(() -> {
-                            Alert alert = new Alert(Alert.AlertType.ERROR);
-                            alert.setTitle("Error");
-                            alert.setHeaderText(response.getErrorMessage());
-                            alert.show();
-                            controller.deleteAndUpdateView();
-                        });
-                    }
                     else {
                         Platform.runLater(() -> {
                             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -76,7 +68,7 @@ public class ClientListener implements Runnable{
                     Platform.runLater(() -> {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("Success");
-                        alert.setHeaderText("Email correctly sent ");
+                        alert.setHeaderText("L'email è stata correttamente consegnata");
                         alert.show();
                     });
                 }
@@ -84,10 +76,16 @@ public class ClientListener implements Runnable{
                     Email newEmail = ((NewEmailNotification) serverResponse).getNewEmail();
                     Platform.runLater(() -> {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("New email");
-                        alert.setHeaderText("A new mail arrived from " + newEmail.getSender());
+                        alert.setTitle("Nuova mail");
+                        alert.setHeaderText("E' arrivata una nuova mail da: " + newEmail.getSender());
                         alert.show();
                         controller.addEmailToInbox(newEmail);
+                    });
+                }
+                else if (serverResponse instanceof DeleteEmailNotification) {
+                    Email emailToDelete = ((DeleteEmailNotification) serverResponse).getDeletedEmail();
+                    Platform.runLater(() -> {
+                        controller.deleteAndUpdateView(emailToDelete);
                     });
                 }
             }

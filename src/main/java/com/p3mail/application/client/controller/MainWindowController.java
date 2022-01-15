@@ -30,7 +30,7 @@ public class MainWindowController {
 	private ImageView imgIcon;
 
 	@FXML
-	private Label lblName;
+	private Label lblNameAndSurname;
 
 	@FXML
 	private Label lblSurname;
@@ -81,8 +81,7 @@ public class MainWindowController {
 		selectedEmail = null;
 
 		//binding tra lstEmails e inboxProperty
-		lblName.textProperty().bind(model.nameProperty());
-		lblSurname.textProperty().bind(model.surnameProperty());
+		lblNameAndSurname.setText(model.nameProperty().get() + " " + model.surnameProperty().get());
 		lblEmailAddress.textProperty().bind(model.emailAddressProperty());
 		lstEmails.itemsProperty().bind(model.inboxProperty());
 
@@ -141,6 +140,11 @@ public class MainWindowController {
 
 	public void deleteAndUpdateView() {
 		model.deleteEmail(selectedEmail); //do this only if server says that all works fine!
+		updateDetailView(emptyEmail);
+	}
+
+	public void deleteAndUpdateView(Email email) {
+		model.deleteEmail(email.getId()); //do this only if server says that all works fine!
 		updateDetailView(emptyEmail);
 	}
 
@@ -225,7 +229,7 @@ public class MainWindowController {
 //			System.out.println("You want to delete the email with id = " + selectedEmail.getId()); //debug purpose
 			if(socketConnection != null) {
 				try {
-					out.writeObject(new DeleteRequest(selectedEmail.getId()));
+					out.writeObject(new DeleteRequest(selectedEmail));
 				} catch (IOException e) {
 					Alert alert = new Alert(Alert.AlertType.ERROR);
 					alert.setTitle("Error");
