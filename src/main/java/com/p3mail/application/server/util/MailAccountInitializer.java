@@ -22,7 +22,7 @@ public class MailAccountInitializer {
     public static void main(String[] args) {
 
         RegisteredClient registeredClient = new RegisteredClient();
-        List<String> registeredMailAccounts = registeredClient.getRegisteredMails();
+        List<String> registeredMailAccounts = registeredClient.getRegisteredUser();
         String[] objects = new String[] {
                 "Importante", "Mi sono dimenticato", "Allegato busta paga",
                 "Urgente!", "Domani scuola", "Lista spesa", "Resoconto scolastico", "Pagella secondo anno", "Votazione esame programmazione III" };

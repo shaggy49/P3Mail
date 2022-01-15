@@ -57,7 +57,7 @@ public class ClientController {
         if (this.model != null)
             throw new IllegalStateException("Model can only be initialized once");
         //istanza nuovo client
-        model = new Client("Federico", "Ferreri", "mc@unito.it");
+        model = new Client("Federico", "Ferreri", "ff@unito.it");
 
         selectedEmail = null;
 
@@ -116,10 +116,10 @@ public class ClientController {
     /**
      * Aggiunge una mail alla lista
      */
-    @FXML
-    protected void onNotifyButtonClick() throws IOException {
-        out.writeObject(new TriggerServerRequest());
-    }
+//    @FXML
+//    protected void onNotifyButtonClick() throws IOException {
+//        out.writeObject(new TriggerServerRequest());
+//    }
 
 
     @FXML
@@ -129,7 +129,7 @@ public class ClientController {
             try {
                 Email emailToSend = new Email(
                         model.emailAddressProperty().get(),
-                        List.of("aef@unito.it", "mc@unito.it", "ff@unito.it"),
+                        List.of("mc@unito.it", "ff@unito.it"),
                         "Mail spedita dal client",
                         "Spero tutto funzioni, W la vita!!");
                 System.out.println("You want to send the email: "); //debug purpose

@@ -1,15 +1,16 @@
 package com.p3mail.application.connection;
 
+import com.p3mail.application.connection.model.Email;
 import com.p3mail.application.connection.response.ServerResponse;
 
 public class NewEmailNotification extends ServerResponse {
-    private String fromEmailAddress;
+    private Email newEmail;
 
-    public NewEmailNotification(String fromEmailAddress) {
-        this.fromEmailAddress = fromEmailAddress;
+    public NewEmailNotification(Email newEmail) {
+        this.newEmail = newEmail;
     }
 
-    public String getFromEmailAddress() {
-        return fromEmailAddress;
+    public Email getNewEmail() {
+        return newEmail;
     }
 }

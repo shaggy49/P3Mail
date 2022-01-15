@@ -12,7 +12,6 @@ import java.io.*;
 import java.net.Socket;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
@@ -21,7 +20,7 @@ public class ClientServerConnection implements Runnable {
     private String userEmailAddress;
     ObjectOutputStream out;
     private Vector<ClientServerConnection> clients;
-
+    private final Object fileLock = new Object();
 
     /**
      * Constructs a handler.
@@ -49,7 +48,7 @@ public class ClientServerConnection implements Runnable {
 
                 System.out.println("Client request connection from user: " + userEmailAddress);
 
-                if(!registeredClients.getRegisteredMails().contains(userEmailAddress)){
+                if(!registeredClients.getRegisteredUser().contains(userEmailAddress)){
                     out.writeObject(new MailNotFoundException());
                     throw new MailNotFoundException();
                 }
@@ -83,36 +82,29 @@ public class ClientServerConnection implements Runnable {
                         System.out.println("email: $" + emailId + " deleted");
                         out.writeObject(response);
                     }
-                    else if (request instanceof TriggerServerRequest) {
-                        notifyAllConnectedClients();
-                    }
+//                    else if (request instanceof TriggerServerRequest) {
+//                        notifyAllConnectedClients();
+//                    }
                     else if (request instanceof SendRequest) {
                         Email emailSended = ((SendRequest) request).getEmailToSend();
                         List<String> receivers = emailSended.getReceivers();
                         System.out.println("receive a send request for receivers : " + receivers);
-                        //TODO: check receivers if well formed (@ and .)
-                        if(!registeredClients.getRegisteredMails().containsAll(receivers)){
+                        if(!registeredClients.getRegisteredUser().containsAll(receivers)){
                             System.out.println("some emails are not registered!");
                             out.writeObject(new MailNotFoundException());
                         }
                         else {
                             for (String receiver : receivers) {
-                                synchronized (clients) { //not sure if "this" or "clients" are correct
-                                    int indexOfLastEmail = getIndexOfLastEmailForAccount(receiver);
-                                    addEmailToInboxOf(emailSended, receiver, indexOfLastEmail);
-                                    updateIndexOfLastEmailForAccount(receiver, indexOfLastEmail);
-                                }
+                                int indexOfLastEmail = getIndexOfLastEmailForAccount(receiver);
+                                addEmailToInboxOf(emailSended, receiver, indexOfLastEmail);
+                                updateIndexOfLastEmailForAccount(receiver, indexOfLastEmail);
                             }
                             System.out.println("email correctly stored!");
-                            //TODO: notify all connected receivers
-//                        notifyConnectedReceiver(receivers);
                             System.out.println("about to send notifications to connected client: " + receivers);
+                            notifyConnectedReceivers(emailSended);
                             out.writeObject(new SendResponse());
-                            //notifyClients
                         }
                     }
-                    //else if socket input type of richiesta di invio => inviaMail()
-                    //else error ed esci
                 }
 
                 System.out.printf("(%s): connection closed\n", userEmailAddress);
@@ -133,15 +125,14 @@ public class ClientServerConnection implements Runnable {
         }
     }
 
-    private void updateIndexOfLastEmailForAccount(String receiver, int index) throws IOException {
-        String path = String.format("." + File.separator + "server" + File.separator + receiver + File.separator + "info.dat");
-
-        File file = new File(path);
-
-        FileOutputStream fos = new FileOutputStream(file, false);
-        ObjectOutputStream outputStream  = new ObjectOutputStream(fos);
-
-        outputStream.writeObject(index + 1);
+    private void notifyConnectedReceivers(Email email) throws IOException {
+        List<String> receivers = email.getReceivers();
+        for (ClientServerConnection connectedClient : clients) {
+            for (String receiver : receivers) {
+                if(connectedClient.userEmailAddress.equals(receiver))
+                    connectedClient.out.writeObject(new NewEmailNotification(email));
+            }
+        }
     }
 
     private int getIndexOfLastEmailForAccount(String receiver) throws IOException, ClassNotFoundException {
@@ -149,7 +140,42 @@ public class ClientServerConnection implements Runnable {
         File file = new File(path);
         FileInputStream fos = new FileInputStream(file);
         ObjectInputStream inputStream = new ObjectInputStream(fos);
-        return (Integer) inputStream.readObject();
+        Integer index = 0;
+
+//        ReadWriteLock rwl = new ReentrantReadWriteLock();
+//        Lock readLock = rwl.readLock();
+
+//        readLock.lock();
+        synchronized (fileLock) {
+            index = (Integer) inputStream.readObject();
+        }
+//        readLock.unlock();
+
+        inputStream.close();
+        fos.close();
+        return index;
+    }
+
+    private void updateIndexOfLastEmailForAccount(String receiver, int index) throws IOException {
+        String path = "." + File.separator + "server" + File.separator + receiver + File.separator + "info.dat";
+
+        File file = new File(path);
+
+        FileOutputStream fos = new FileOutputStream(file, false);
+        ObjectOutputStream outputStream  = new ObjectOutputStream(fos);
+
+//        ReadWriteLock rwl = new ReentrantReadWriteLock();
+//        Lock writeLock = rwl.writeLock();
+
+//        writeLock.lock();
+        synchronized (fileLock) {
+            outputStream.writeObject(index + 1);
+        }
+//        writeLock.unlock();
+
+
+        outputStream.close();
+        fos.close();
     }
 
     private void addEmailToInboxOf(Email emailToAdd, String accountReceiver, int indexForEmail) throws IOException {
@@ -162,18 +188,11 @@ public class ClientServerConnection implements Runnable {
         outputStream.writeObject(emailToAdd);
     }
 
-//    private void notifyConnectedReceiver(List<String> receivers) throws IOException {
+//    private void notifyAllConnectedClients() throws IOException {
 //        for (ClientServerConnection connectedClient : clients) {
-//            if(receivers.contains(connectedClient.userEmailAddress))
-//                connectedClient.out.writeObject(new NewEmailNotification(receivers));
+//            connectedClient.out.writeObject(new NewEmailNotification("notifica dal server per tutti i clienti connessi"));
 //        }
 //    }
-
-    private void notifyAllConnectedClients() throws IOException {
-        for (ClientServerConnection connectedClient : clients) {
-            connectedClient.out.writeObject(new NewEmailNotification("notifica dal server per tutti i clienti connessi"));
-        }
-    }
 
     private boolean deleteEmailWithId(int emailId) {
         boolean result = false;

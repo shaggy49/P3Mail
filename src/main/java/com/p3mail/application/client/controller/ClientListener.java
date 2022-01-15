@@ -78,14 +78,16 @@ public class ClientListener implements Runnable{
                     });
                 }
                 else if (serverResponse instanceof NewEmailNotification) {
-                    String emailAddress = ((NewEmailNotification) serverResponse).getFromEmailAddress();
+                    Email newEmail = ((NewEmailNotification) serverResponse).getNewEmail();
                     Platform.runLater(() -> {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("Notification");
-                        alert.setHeaderText("A new mail arrived from " + emailAddress);
+                        alert.setTitle("New email");
+                        alert.setHeaderText("A new mail arrived from " + newEmail.getSender());
                         alert.show();
                     });
-                    //metodo del controller che aggiunge la mail all'inbox in real time
+                    Platform.runLater(() -> {
+                        controller.addEmailToInbox(newEmail);
+                    });
                 }
             }
         } catch (IOException ignored) {
