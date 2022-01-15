@@ -2,14 +2,13 @@ package com.p3mail.application.client.controller;
 
 import com.p3mail.application.ClientMain;
 import com.p3mail.application.client.model.Client;
-import com.p3mail.application.client.model.Email;
+import com.p3mail.application.connection.model.Email;
+import com.p3mail.application.connection.request.SendRequest;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
-import javafx.util.Duration;
-import javafx.animation.FadeTransition;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -17,11 +16,16 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
 public class NewMessageController {
+	Socket socketConnection = null;
+	ObjectOutputStream out = null;
+
 	@FXML
 	private TextArea textContent;
 
@@ -58,16 +62,18 @@ public class NewMessageController {
 	 * @param email
 	 */
 	@FXML
-	public void initialize(Boolean isNewMessage, Client model, Email email) {
+	public void initialize(Boolean isNewMessage, Client model, Email email, Socket socketConnection, ObjectOutputStream out) {
 		this.model = model;
 		this.isNewMessage = isNewMessage;
+		this.socketConnection = socketConnection;
+		this.out = out;
 		receivers = new ArrayList<>();
 		alreadyChecked = true;
 		syntaxIsCorrect = true;
 		moreRecipientsLabel.setVisible(false);
 		if (!isNewMessage) {
 			objectField.setEditable(false);
-			objectField.setText(email.getObject());
+			objectField.setText("Fwd: " + email.getObject());
 			StringBuilder stringBuilder = new StringBuilder();
 			stringBuilder.append(email.getReceivers().get(0));
 			for (int i = 1; i < email.getReceivers().size(); i++) {
@@ -174,10 +180,20 @@ public class NewMessageController {
 				if (!informationDialog())
 					return;
 			}
+
+			Email emailToSend = new Email(
+					model.emailAddressProperty().get(),
+					receivers,
+					objectField.getText(),
+					textContent.getText());
+			System.out.println("You want to send the email: "); //debug purpose
+			System.out.println(emailToSend);
+			out.writeObject(new SendRequest(emailToSend));
+
 			FXMLLoader loader = new FXMLLoader((ClientMain.class.getResource("mainWindow.fxml")));
 			Parent root = (Parent) loader.load();
 			MainWindowController newMainWindowController = loader.getController();
-			newMainWindowController.initialize(model);
+			newMainWindowController.initialize(false, model, socketConnection, out);
 
 			Scene scene = new Scene(root);
 			Stage stage = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
@@ -197,7 +213,7 @@ public class NewMessageController {
 		FXMLLoader loader = new FXMLLoader((ClientMain.class.getResource("mainWindow.fxml")));
 		Parent root = (Parent) loader.load();
 		MainWindowController newMainWindowController = loader.getController();
-		newMainWindowController.initialize(model);
+		newMainWindowController.initialize(false, model, socketConnection, out);
 
 		Scene scene = new Scene(root);
 		Stage stage = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();

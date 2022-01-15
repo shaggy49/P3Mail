@@ -1,5 +1,6 @@
-package com.p3mail.application.client.controller;
+package com.p3mail.application.client;
 
+import com.p3mail.application.client.controller.MainWindowController;
 import com.p3mail.application.connection.MailNotFoundException;
 import com.p3mail.application.connection.model.Email;
 import com.p3mail.application.connection.NewEmailNotification;
@@ -14,11 +15,11 @@ import java.net.Socket;
 import java.util.List;
 
 public class ClientListener implements Runnable{
-    ClientController controller;
+    MainWindowController controller;
     private Socket socket;
     ObjectInputStream in;
 
-    public ClientListener(ClientController controller, Socket socket) throws IOException {
+    public ClientListener(MainWindowController controller, Socket socket) throws IOException {
         this.controller = controller;
         this.socket = socket;
         in =  new ObjectInputStream(socket.getInputStream());
@@ -39,9 +40,11 @@ public class ClientListener implements Runnable{
                 }
                 else if (serverResponse instanceof List) {
                     List<Email> userEMail = (List<Email>) serverResponse;
-                    for (Email email : userEMail) {
-                        controller.addEmailToInbox(email);
-                    }
+                    Platform.runLater(() -> {
+                        for (Email email : userEMail) {
+                            controller.addEmailToInbox(email);
+                        }
+                    });
                 }
                 else if (serverResponse instanceof DeleteResponse) {
                     DeleteResponse response = (DeleteResponse) serverResponse;
@@ -84,8 +87,6 @@ public class ClientListener implements Runnable{
                         alert.setTitle("New email");
                         alert.setHeaderText("A new mail arrived from " + newEmail.getSender());
                         alert.show();
-                    });
-                    Platform.runLater(() -> {
                         controller.addEmailToInbox(newEmail);
                     });
                 }

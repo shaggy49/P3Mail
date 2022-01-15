@@ -28,6 +28,14 @@ public class Email implements Serializable {
         this.date = new Date();
     }
 
+    public Email(String sender, List<String> receivers, String object, String text, Date date) {
+        this.sender = sender;
+        this.receivers = receivers;
+        this.object = object;
+        this.text = text;
+        this.date = date;
+    }
+
     /**
      * Costruttore della classe.
      *
@@ -37,7 +45,6 @@ public class Email implements Serializable {
      * @param object     oggetto della mail
      * @param text       testo della mail
      */
-
 
     /*
         TODO: Da aggiungere il controllo che il sender e i receiver abbiano una @ seguita da un .
@@ -49,6 +56,10 @@ public class Email implements Serializable {
         this.text = text;
         this.receivers = new ArrayList<>(receivers);
         this.date = new Date();
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getId() {

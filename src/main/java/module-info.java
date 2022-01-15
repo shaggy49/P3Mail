@@ -12,4 +12,6 @@ module com.p3mail.application.p3mail {
     opens com.p3mail.application.client.controller to javafx.fxml;
     exports com.p3mail.application.connection.model;
     opens com.p3mail.application.connection.model to javafx.fxml;
+    exports com.p3mail.application.client;
+    opens com.p3mail.application.client to javafx.fxml;
 }

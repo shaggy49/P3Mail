@@ -1,6 +1,9 @@
 package com.p3mail.application.client.controller;
 
 import com.p3mail.application.ClientMain;
+import com.p3mail.application.client.ClientListener;
+import com.p3mail.application.connection.model.Email;
+import com.p3mail.application.connection.request.DeleteRequest;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -8,20 +11,21 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 
 import com.p3mail.application.client.model.Client;
-import com.p3mail.application.client.model.Email;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.net.Socket;
 import java.util.List;
-import java.util.Objects;
 
 public class MainWindowController {
+	Socket socketConnection = null;
+	ObjectOutputStream out = null;
+
 	@FXML
 	private ImageView imgIcon;
 
@@ -69,8 +73,10 @@ public class MainWindowController {
 	private Client model;
 
 	@FXML
-	public void initialize(Client model) {
+	public void initialize(boolean firstTime, Client model, Socket socketConnection, ObjectOutputStream out) {
 		this.model = model;
+		this.socketConnection = socketConnection;
+		this.out = out;
 
 		selectedEmail = null;
 
@@ -80,10 +86,24 @@ public class MainWindowController {
 		lblEmailAddress.textProperty().bind(model.emailAddressProperty());
 		lstEmails.itemsProperty().bind(model.inboxProperty());
 
-//TODO capire che cosa fa ehehe
-//		emptyEmail = new Email("", List.of(""), "", "");
-//
-//		updateDetailView(emptyEmail);
+		if(firstTime) {
+			ClientListener clientListener = null;
+			try {
+				clientListener = new ClientListener(this, socketConnection);
+			} catch (IOException e) {
+				e.printStackTrace();
+				Alert alert = new Alert(Alert.AlertType.ERROR);
+				alert.setTitle("Error");
+				alert.setHeaderText("Connection failed");
+				alert.show();
+			}
+			new Thread(clientListener).start();
+		}
+
+		emptyEmail = new Email("", List.of(""), "", "", null);
+
+		updateDetailView(emptyEmail);
+
 	}
 
 	/**
@@ -107,9 +127,21 @@ public class MainWindowController {
 			lblFrom.setText(email.getSender());
 			lblTo.setText(String.join(", ", email.getReceivers()));
 			lblObject.setText(email.getObject());
-			lblDate.setText(email.getDate().toString());
+			if(email.getDate() == null)
+				lblDate.setText("");
+			else
+				lblDate.setText(email.getDate().toString());
 			txtEmailContent.setText(email.getText());
 		}
+	}
+
+	public void addEmailToInbox(Email email) {
+		model.addEmail(email);
+	}
+
+	public void deleteAndUpdateView() {
+		model.deleteEmail(selectedEmail); //do this only if server says that all works fine!
+		updateDetailView(emptyEmail);
 	}
 
 	/**
@@ -123,7 +155,7 @@ public class MainWindowController {
 		FXMLLoader loader = new FXMLLoader((ClientMain.class.getResource("newMessage.fxml")));
 		Parent root = (Parent) loader.load();
 		NewMessageController newMsgController = loader.getController();
-		newMsgController.initialize(true, model, selectedEmail);
+		newMsgController.initialize(true, model, selectedEmail, socketConnection, out);
 
 		Scene scene = new Scene(root);
 		Stage stage = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
@@ -145,9 +177,9 @@ public class MainWindowController {
 			ReplyController newReplyController = loader.getController();
 			Button b = (Button) mouseEvent.getSource();
 			if (b.getId().equals("reply"))
-				newReplyController.initialize(false, model, selectedEmail);
+				newReplyController.initialize(false, model, selectedEmail, socketConnection, out);
 			else
-				newReplyController.initialize(true, model, selectedEmail);
+				newReplyController.initialize(true, model, selectedEmail, socketConnection, out);
 
 			Scene scene = new Scene(root);
 			Stage stage = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
@@ -172,7 +204,7 @@ public class MainWindowController {
 			Parent root = (Parent) loader.load();
 
 			NewMessageController newMsgController = loader.getController();
-			newMsgController.initialize(false, model, selectedEmail);
+			newMsgController.initialize(false, model, selectedEmail, socketConnection, out);
 
 			Scene scene = new Scene(root);
 			Stage stage = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
@@ -186,12 +218,22 @@ public class MainWindowController {
 	 * When delete button is clicked the email that is open is deleted.
 	 */
 	public void handleDeleteButton(MouseEvent mouseEvent) {
-		if (selectedEmail == null)
+		if (selectedEmail == null) {
 			errorDialog();
+		}
 		else if (confirmDialog()) {
-			System.out.println("delete button is clicked --> it should delete the open email");
-			//model.deleteEmail(selectedEmail);
-			//updateDetailView(emptyEmail);
+//			System.out.println("You want to delete the email with id = " + selectedEmail.getId()); //debug purpose
+			if(socketConnection != null) {
+				try {
+					out.writeObject(new DeleteRequest(selectedEmail.getId()));
+				} catch (IOException e) {
+					Alert alert = new Alert(Alert.AlertType.ERROR);
+					alert.setTitle("Error");
+					alert.setHeaderText("The server doesn't seem connected!");
+					alert.show();
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 

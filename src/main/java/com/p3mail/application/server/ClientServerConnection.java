@@ -96,6 +96,7 @@ public class ClientServerConnection implements Runnable {
                         else {
                             for (String receiver : receivers) {
                                 int indexOfLastEmail = getIndexOfLastEmailForAccount(receiver);
+                                emailSended.setId(indexOfLastEmail);
                                 addEmailToInboxOf(emailSended, receiver, indexOfLastEmail);
                                 updateIndexOfLastEmailForAccount(receiver, indexOfLastEmail);
                             }
@@ -186,6 +187,9 @@ public class ClientServerConnection implements Runnable {
         FileOutputStream fos = new FileOutputStream(file);
         ObjectOutputStream outputStream = new ObjectOutputStream(fos);
         outputStream.writeObject(emailToAdd);
+
+        outputStream.close();
+        fos.close();
     }
 
 //    private void notifyAllConnectedClients() throws IOException {

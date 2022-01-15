@@ -1,9 +1,15 @@
 package com.p3mail.application.client.controller;
 
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.p3mail.application.ClientMain;
 import com.p3mail.application.client.model.Client;
-import com.p3mail.application.client.model.Email;
+import com.p3mail.application.connection.model.Email;
+import com.p3mail.application.connection.request.SendRequest;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -14,6 +20,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 public class ReplyController {
+	Socket socketConnection = null;
+	ObjectOutputStream out = null;
+
+
 	@FXML
 	private Label receiversLbl;
 
@@ -31,6 +41,7 @@ public class ReplyController {
 
 	private Client model;
 	private Email email;
+	private List<String> replyReceiver = new ArrayList<>();
 
 	/**
 	 * This method takes the model as parameter to save information about model.
@@ -40,12 +51,20 @@ public class ReplyController {
 	 * @param email
 	 */
 	@FXML
-	void initialize(Boolean isReplyAll, Client model, Email email) {
+	void initialize(Boolean isReplyAll, Client model, Email email, Socket socketConnection, ObjectOutputStream out) {
+		this.model = model;
+		this.email = email;
+		this.socketConnection = socketConnection;
+		this.out = out;
+		replyReceiver.add(email.getSender());
 		if(isReplyAll) {
 			receiversLbl.setText("Destinatari:");
 			StringBuilder stringBuilder = new StringBuilder();
-			for (int i = 1; i < email.getReceivers().size(); i++) {
-				stringBuilder.append(", ").append(email.getReceivers().get(i));
+			for (String receiver : email.getReceivers()) {
+				if(!receiver.equals(model.emailAddressProperty().get())) {
+					stringBuilder.append(", ").append(receiver);
+					replyReceiver.add(receiver);
+				}
 			}
 			receiversField.setText(email.getSender() + stringBuilder.toString());
 		}
@@ -54,8 +73,6 @@ public class ReplyController {
 			receiversField.setText(email.getSender());
 		}
 		receivedText.setText("Data email ricevuta: " + email.getDate() + '\n' + "Oggetto: " + email.getObject() + '\n' + "Contenuto: " + email.getText());
-		this.model = model;
-		this.email = email;
 	}
 
 
@@ -72,10 +89,19 @@ public class ReplyController {
 			alert.setHeaderText("Inserisci un messaggio di risposta per inviare la mail");
 			alert.showAndWait();
 		} else {
+			Email emailToSend = new Email(
+					model.emailAddressProperty().get(),
+					replyReceiver,
+					"Re: " + email.getObject(),
+					sendText.getText());
+			System.out.println("You want to send the email: "); //debug purpose
+			System.out.println(emailToSend);
+			out.writeObject(new SendRequest(emailToSend));
+
 			FXMLLoader loader = new FXMLLoader((ClientMain.class.getResource("mainWindow.fxml")));
 			Parent root = (Parent) loader.load();
 			MainWindowController newMainWindowController = loader.getController();
-			newMainWindowController.initialize(model);
+			newMainWindowController.initialize(false, model, socketConnection, out);
 
 			Scene scene = new Scene(root);
 			Stage stage = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();

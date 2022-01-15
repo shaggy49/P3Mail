@@ -70,7 +70,7 @@
 						</HBox>
 					</top>
 					<center>
-						<ListView fx:id="lstEmails" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" onMouseClicked="#showSelectedEmail"/>
+						<ListView fx:id="lstEmails" onMouseClicked="#showSelectedEmail" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
 					</center>
 					<right>
 						<ScrollBar orientation="VERTICAL" BorderPane.alignment="CENTER" />
@@ -147,7 +147,7 @@
 							<top>
 								<ButtonBar prefHeight="40.0" prefWidth="453.0" style="-fx-background-color: #044A59#044A59;" BorderPane.alignment="CENTER">
 									<buttons>
-										<Button fx:id="reply" contentDisplay="RIGHT" layoutX="391.0" layoutY="17.0" mnemonicParsing="false" style="-fx-background-color: #78B8BF#78B8BF #78B8BF#78B8BF; -fx-background-radius: 20px;" text="Rispondi" textFill="WHITE" onMouseClicked="#handleRepliesButton">
+										<Button fx:id="reply" contentDisplay="RIGHT" layoutX="391.0" layoutY="17.0" mnemonicParsing="false" onMouseClicked="#handleRepliesButton" style="-fx-background-color: #78B8BF#78B8BF #78B8BF#78B8BF; -fx-background-radius: 20px;" text="Rispondi" textFill="WHITE">
 											<font>
 												<Font name="Arial" size="13.0" />
 											</font>
@@ -159,7 +159,7 @@
 												</ImageView>
 											</graphic>
 										</Button>
-										<Button fx:id="replyAll" contentDisplay="RIGHT" layoutX="311.0" layoutY="17.0" mnemonicParsing="false" style="-fx-background-color: #78B8BF#78B8BF; -fx-background-radius: 20px;" text="Rispondi a tutti" textFill="WHITE" onMouseClicked="#handleRepliesButton">
+										<Button fx:id="replyAll" contentDisplay="RIGHT" layoutX="311.0" layoutY="17.0" mnemonicParsing="false" onMouseClicked="#handleRepliesButton" style="-fx-background-color: #78B8BF#78B8BF; -fx-background-radius: 20px;" text="Rispondi a tutti" textFill="WHITE">
 											<font>
 												<Font name="Arial" size="13.0" />
 											</font>
@@ -171,7 +171,7 @@
 												</ImageView>
 											</graphic>
 										</Button>
-										<Button contentDisplay="RIGHT" layoutX="231.0" layoutY="17.0" mnemonicParsing="false" style="-fx-background-color: #78B8BF#78B8BF #78B8BF#78B8BF; -fx-background-radius: 20px;" text="Inoltra" textFill="WHITE" onMouseClicked="#handleForwardButton">
+										<Button contentDisplay="RIGHT" layoutX="231.0" layoutY="17.0" mnemonicParsing="false" onMouseClicked="#handleForwardButton" style="-fx-background-color: #78B8BF#78B8BF #78B8BF#78B8BF; -fx-background-radius: 20px;" text="Inoltra" textFill="WHITE">
 											<font>
 												<Font name="Arial" size="13.0" />
 											</font>
@@ -183,7 +183,7 @@
 												</ImageView>
 											</graphic>
 										</Button>
-										<Button contentDisplay="RIGHT" mnemonicParsing="false" style="-fx-background-color: #78B8BF#78B8BF #78B8BF#78B8BF; -fx-background-radius: 20px;" text="Elimina" textFill="WHITE" onMouseClicked="#handleDeleteButton">
+										<Button contentDisplay="RIGHT" mnemonicParsing="false" onMouseClicked="#handleDeleteButton" style="-fx-background-color: #78B8BF#78B8BF #78B8BF#78B8BF; -fx-background-radius: 20px;" text="Elimina" textFill="WHITE">
 											<font>
 												<Font name="Arial" size="13.0" />
 											</font>

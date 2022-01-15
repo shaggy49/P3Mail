@@ -1,11 +1,11 @@
 package com.p3mail.application.client.controller;
 
+import com.p3mail.application.client.ClientListener;
 import com.p3mail.application.client.model.Client;
 import com.p3mail.application.connection.model.Email;
 import com.p3mail.application.connection.request.DeleteRequest;
 import com.p3mail.application.connection.request.DisconnectRequest;
 import com.p3mail.application.connection.request.SendRequest;
-import com.p3mail.application.connection.request.TriggerServerRequest;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
@@ -94,8 +94,8 @@ public class ClientController {
         out.writeObject(model.emailAddressProperty().get());
         System.out.println("I send my mail address to the server");
 
-        ClientListener clientListener = new ClientListener(this, socketConnection);
-        new Thread(clientListener).start();
+//        ClientListener clientListener = new ClientListener(this, socketConnection);
+//        new Thread(clientListener).start();
 
     }
 

@@ -2,8 +2,7 @@ package com.p3mail.application.client.controller;
 
 import com.p3mail.application.ClientMain;
 import com.p3mail.application.client.model.Client;
-import com.p3mail.application.client.model.Email;
-import com.p3mail.application.server.MailNotFoundException;
+import com.p3mail.application.connection.request.DisconnectRequest;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -18,10 +17,12 @@ import javafx.stage.Stage;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.List;
-import java.util.Objects;
 
 public class LoginController {
+	Socket socketConnection = null;
+	ObjectOutputStream out = null;
+
+
 	@FXML
 	private RadioButton accountFf;
 
@@ -59,12 +60,23 @@ public class LoginController {
 			} else if(rb.getId().equals("accountMc")){
 				model = new Client("Mattia", "Carlino", "mc@unito.it");
 			}
-			newConnection();
+
+			try {
+				connectWithServer();
+			} catch (IOException e) {
+				e.printStackTrace();
+				Alert alert = new Alert(Alert.AlertType.ERROR);
+				alert.setTitle("Error");
+				alert.setHeaderText("Connection failed");
+				alert.show();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
 
 			FXMLLoader loader = new FXMLLoader((ClientMain.class.getResource("mainWindow.fxml"))) ;
 			Parent root = (Parent) loader.load();
 			MainWindowController newMainWindowController = loader.getController();
-			newMainWindowController.initialize(model);
+			newMainWindowController.initialize(true, model, socketConnection, out);
 
 			Scene scene = new Scene(root);
 			Stage stage = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
@@ -78,55 +90,32 @@ public class LoginController {
 //		}
 	}
 
-	private void newConnection() {
-		try {
-			connectWithServer();
-			Alert mailSuccessAlert = new Alert(Alert.AlertType.INFORMATION);
-			mailSuccessAlert.setTitle("Success");
-			mailSuccessAlert.setHeaderText("You entered a valid mail address!");
-			mailSuccessAlert.show();
-		} catch (MailNotFoundException e) {
-			Alert mailErrorAlert = new Alert(Alert.AlertType.ERROR);
-			mailErrorAlert.setTitle("Error");
-			mailErrorAlert.setHeaderText(e.getMessage());
-			mailErrorAlert.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setTitle("Error");
-			alert.setHeaderText("Connection failed");
-			alert.show();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void connectWithServer() throws MailNotFoundException, IOException, ClassNotFoundException {
-		Socket s = null;
-
+	private void connectWithServer() throws IOException, ClassNotFoundException {
 		String nomeHost = InetAddress.getLocalHost().getHostName();
 		System.out.println(nomeHost);
-		s = new Socket(nomeHost, 8189);
+		socketConnection = new Socket(nomeHost, 8189);
 		System.out.println("Connection established!");
-		InputStream inStream = s.getInputStream();
-		OutputStream outStream = s.getOutputStream();
-//            Scanner in = new Scanner(inStream);
-		ObjectInputStream in = new ObjectInputStream(inStream);
-		PrintWriter out = new PrintWriter(outStream, true);
-		out.println(model.emailAddressProperty().get());
-		System.out.println("Ho spedito il messaggio al socket");
+		OutputStream socketOutputStream = socketConnection.getOutputStream();
 
-		Object serverResponse = in.readObject();
-		if(serverResponse instanceof MailNotFoundException){
-			throw new MailNotFoundException();
-		}
-		else {
-			List<Email> userEMail = (List<Email>) serverResponse;
-			for (Email email : userEMail) {
-				model.addEmail(email);
+
+		out = new ObjectOutputStream(socketOutputStream);
+		out.writeObject(model.emailAddressProperty().get());
+		System.out.println("I send my mail address to the server");
+
+	}
+
+	public void closeSocketConnection() {
+		try {
+			if(out != null) {
+				out.writeObject(new DisconnectRequest());
 			}
+			if(socketConnection != null) {
+				socketConnection.close();
+				System.out.println("Connessione terminata");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		s.close();
 	}
 
 }

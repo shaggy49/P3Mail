@@ -10,10 +10,11 @@ import java.io.IOException;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class MailServer extends Application {
+public class MailServerGUI extends Application {
 	boolean closeConnection = false;
 	ServerSocket s = null;
 	ThreadConnection tc = null;
@@ -57,22 +58,25 @@ public class MailServer extends Application {
 			try {
 				s = new ServerSocket(8189); //trova il socket in rete
 				ExecutorService exec = Executors.newFixedThreadPool(N_THREADS);
+				Vector<ClientServerConnection> clientsConnected = new Vector<>();
+
 				//dove va messo lo shutdown dell'executorService?
 
-				while (!closeConnection) {
+				while (true) {
 					Socket incoming = s.accept(); // si mette in attesa di richiesta di connessione e la apre
-					Runnable connection = new ClientServerConnection(incoming);
+					ClientServerConnection connection = new ClientServerConnection(incoming, clientsConnected);
 					exec.execute(connection);
+					clientsConnected.add(connection);
 				}
-				exec.shutdown();
 			} catch (IOException e) {
 				e.printStackTrace();
-			}
-			finally {
-				try {
-					s.close();
-				} catch (IOException e) {
-					e.printStackTrace();
+			} finally {
+				if(s != null) {
+					try {
+						s.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}
