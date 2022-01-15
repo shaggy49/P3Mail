@@ -85,7 +85,7 @@ public class NewMessageController {
 		if (!alreadyChecked) {
 			boolean valid = true;
 			String allRecipients = receiversField.getText();
-			receivers = List.of(allRecipients.split(" "));
+			receivers = List.of(allRecipients.split(", "));
 			for (String rec : receivers) {
 				valid = valid && isValid(rec);
 			}
@@ -148,7 +148,7 @@ public class NewMessageController {
 	public void handleNewRecipients(MouseEvent mouseEvent) {
 		if (emailsSyntaxIsCorrect()) {
 			moreRecipientsLabel.setVisible(false);
-			moreRecipientsLabel.setText("Inserisci uno spazio tra le mail se vuoi aggiungere più destinatari");
+			moreRecipientsLabel.setText("Inserisci una virgola seguita da uno spazio se vuoi aggiungere più destinatari");
 			moreRecipientsLabel.setTextFill(Color.web("#06bf9d"));
 			moreRecipientsLabel.setVisible(true);
 //			FadeTransition fadeOut = new FadeTransition(Duration.millis(8000), moreRecipientsLabel);
