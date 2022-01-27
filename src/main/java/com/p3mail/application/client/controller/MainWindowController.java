@@ -4,6 +4,7 @@ import com.p3mail.application.ClientMain;
 import com.p3mail.application.client.ClientListener;
 import com.p3mail.application.connection.model.Email;
 import com.p3mail.application.connection.request.DeleteRequest;
+import com.p3mail.application.connection.request.DisconnectRequest;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -238,6 +239,32 @@ public class MainWindowController {
 					e.printStackTrace();
 				}
 			}
+		}
+	}
+
+	public void setSocketConnection(Socket socketConnection) {
+		this.socketConnection = socketConnection;
+	}
+
+	public void setOut(ObjectOutputStream out) {
+		this.out = out;
+	}
+
+	public String getEmailAddress() {
+		return model.emailAddressProperty().get();
+	}
+
+	public void closeSocketConnection() {
+		try {
+			if(out != null) {
+				out.writeObject(new DisconnectRequest());
+			}
+//			if(socketConnection != null) {
+//				socketConnection.close();
+//				System.out.println("Connessione terminata");
+//			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 

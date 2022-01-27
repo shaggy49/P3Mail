@@ -47,7 +47,6 @@ public class Email implements Serializable {
      */
 
     /*
-        TODO: Da aggiungere il controllo che il sender e i receiver abbiano una @ seguita da un .
      */
     public Email(int id, String sender, List<String> receivers, String object, String text) {
         this.id = id;

@@ -2,10 +2,7 @@ package com.p3mail.application.server;
 
 import com.p3mail.application.connection.model.Email;
 import com.p3mail.application.connection.request.*;
-import com.p3mail.application.connection.response.DeleteEmailNotification;
-import com.p3mail.application.connection.response.NewEmailNotification;
-import com.p3mail.application.connection.response.DeleteResponse;
-import com.p3mail.application.connection.response.SendResponse;
+import com.p3mail.application.connection.response.*;
 import com.p3mail.application.server.model.RegisteredClient;
 import com.p3mail.application.connection.MailNotFoundException;
 
@@ -36,7 +33,6 @@ public class ClientServerConnection implements Runnable {
     @Override
     public void run() {
         try {
-            // è una buona idea gestire tutta l'interazione con un client dentro un unico thread? Sì :)
             try {
                 InputStream inStream = incoming.getInputStream();
                 OutputStream outStream = incoming.getOutputStream();
@@ -65,11 +61,11 @@ public class ClientServerConnection implements Runnable {
 
                 System.out.printf("(%s): information sent\n", userEmailAddress);
 
-                //maybe here create another thread/task that handles sending messages
                 while(true) {
                     System.out.printf("[%s] I'm ready to listen for some client events..\n", Thread.currentThread().getName());
                     ClientRequest request = (ClientRequest) in.readObject(); //è una chiamata bloccante, aspetta che arrivi qualcosa dal canale del socket
                     if(request instanceof DisconnectRequest) {
+                        out.writeObject(new DisconnectResponse());
                         break;
                     }
                     else if (request instanceof DeleteRequest) {

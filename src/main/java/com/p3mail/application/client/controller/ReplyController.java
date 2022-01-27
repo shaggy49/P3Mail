@@ -106,7 +106,7 @@ public class ReplyController {
 				Email emailToSend = new Email(
 						model.emailAddressProperty().get(),
 						replyReceiver,
-						"Re: " + email.getObject(),
+						email.getObject().startsWith("Re: ") ? email.getObject() : "Re: " + email.getObject(),
 						stringBuilder.toString());
 				System.out.println("You want to send the email: "); //debug purpose
 				System.out.println(emailToSend);

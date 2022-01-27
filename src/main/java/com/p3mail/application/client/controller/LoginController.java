@@ -2,7 +2,6 @@ package com.p3mail.application.client.controller;
 
 import com.p3mail.application.ClientMain;
 import com.p3mail.application.client.model.Client;
-import com.p3mail.application.connection.request.DisconnectRequest;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -21,7 +20,7 @@ import java.net.Socket;
 public class LoginController {
 	Socket socketConnection = null;
 	ObjectOutputStream out = null;
-
+	MainWindowController mainWindowController = null;
 
 	@FXML
 	private RadioButton accountFf;
@@ -73,8 +72,8 @@ public class LoginController {
 
 			FXMLLoader loader = new FXMLLoader((ClientMain.class.getResource("mainWindow.fxml"))) ;
 			Parent root = (Parent) loader.load();
-			MainWindowController newMainWindowController = loader.getController();
-			newMainWindowController.initialize(true, model, socketConnection, out);
+			mainWindowController = loader.getController();
+			mainWindowController.initialize(true, model, socketConnection, out);
 
 			Scene scene = new Scene(root);
 			Stage stage = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
@@ -103,17 +102,8 @@ public class LoginController {
 	}
 
 	public void closeSocketConnection() {
-		try {
-			if(out != null) {
-				out.writeObject(new DisconnectRequest());
-			}
-			if(socketConnection != null) {
-				socketConnection.close();
-				System.out.println("Connessione terminata");
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		if (mainWindowController != null)
+			mainWindowController.closeSocketConnection();
 	}
 
 }
