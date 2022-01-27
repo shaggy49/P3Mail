@@ -23,7 +23,7 @@
 						<Font name="Arial Bold" size="18.0" />
 					</font>
 				</Label>
-            <RadioButton fx:id="accountFf" mnemonicParsing="false" text="ff.unito.it" textFill="WHITE" onMouseClicked="#handleRadioButton">
+            <RadioButton fx:id="accountFf" mnemonicParsing="false" text="ff@unito.it" textFill="WHITE" onMouseClicked="#handleRadioButton">
                <font>
                   <Font name="Arial" size="13.0" />
                </font>
@@ -34,7 +34,7 @@
                   <ToggleGroup fx:id="tgEmail" />
                </toggleGroup>
             </RadioButton>
-            <RadioButton fx:id="accountAf" mnemonicParsing="false" text="af.unito.it" textFill="WHITE" toggleGroup="$tgEmail" onMouseClicked="#handleRadioButton">
+            <RadioButton fx:id="accountAf" mnemonicParsing="false" text="af@unito.it" textFill="WHITE" toggleGroup="$tgEmail" onMouseClicked="#handleRadioButton">
                <font>
                   <Font name="Arial" size="13.0" />
                </font>
@@ -42,7 +42,7 @@
                   <Insets bottom="4.0" right="6.0" />
                </VBox.margin>
             </RadioButton>
-            <RadioButton fx:id="accountMc" layoutX="78.0" layoutY="225.0" mnemonicParsing="false" text="mc.unito.it" textFill="WHITE" toggleGroup="$tgEmail" onMouseClicked="#handleRadioButton">
+            <RadioButton fx:id="accountMc" layoutX="78.0" layoutY="225.0" mnemonicParsing="false" text="mc@unito.it" textFill="WHITE" toggleGroup="$tgEmail" onMouseClicked="#handleRadioButton">
                <font>
                   <Font name="Arial" size="13.0" />
                </font>

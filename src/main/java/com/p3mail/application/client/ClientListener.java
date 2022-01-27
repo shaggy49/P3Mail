@@ -89,7 +89,13 @@ public class ClientListener implements Runnable{
                     });
                 }
             }
-        } catch (IOException ignored) {
+        } catch (IOException e) {
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("The server doesn't seem connected");
+                alert.show();
+            });
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } finally {

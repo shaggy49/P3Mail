@@ -188,18 +188,27 @@ public class NewMessageController {
 					textContent.getText());
 			System.out.println("You want to send the email: "); //debug purpose
 			System.out.println(emailToSend);
-			out.writeObject(new SendRequest(emailToSend));
+			try {
+				out.writeObject(new SendRequest(emailToSend));
+			}
+			catch (IOException e) {
+				Alert alert = new Alert(Alert.AlertType.ERROR);
+				alert.setTitle("Error");
+				alert.setHeaderText("The server doesn't seem connected");
+				alert.show();
+			}
+			finally {
+				FXMLLoader loader = new FXMLLoader((ClientMain.class.getResource("mainWindow.fxml")));
+				Parent root = (Parent) loader.load();
+				MainWindowController newMainWindowController = loader.getController();
+				newMainWindowController.initialize(false, model, socketConnection, out);
 
-			FXMLLoader loader = new FXMLLoader((ClientMain.class.getResource("mainWindow.fxml")));
-			Parent root = (Parent) loader.load();
-			MainWindowController newMainWindowController = loader.getController();
-			newMainWindowController.initialize(false, model, socketConnection, out);
-
-			Scene scene = new Scene(root);
-			Stage stage = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
-			stage.setTitle("Email client");
-			stage.setScene(scene);
-			stage.show();
+				Scene scene = new Scene(root);
+				Stage stage = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
+				stage.setTitle("Email client");
+				stage.setScene(scene);
+				stage.show();
+			}
 		} else
 			recipientsEmailWrong();
 	}
