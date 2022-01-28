@@ -1,56 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.p3mail.application.client.controller.NewMessageController">
-	<bottom>
-		<Pane prefHeight="47.0" prefWidth="600.0" style="-fx-background-color: #044A59#044A59 #044A59#044A59 #044A59#044A59 #044A59#044A59;" BorderPane.alignment="CENTER">
-			<children>
-				<GridPane onMouseClicked="#handleCheckIfTextChanged" prefHeight="47.0" prefWidth="600.0">
-					<columnConstraints>
-						<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-						<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-					</columnConstraints>
-					<rowConstraints>
-						<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-					</rowConstraints>
-					<children>
-						<HBox alignment="CENTER_RIGHT" onMouseClicked="#handleCheckIfTextChanged" GridPane.columnIndex="1">
-							<children>
-								<Button mnemonicParsing="false" onMouseClicked="#handleCancelButton" prefHeight="28.0" style="-fx-background-radius: 20px; -fx-border-radius: 20px;" text="Annulla" textFill="#06bf9d">
-									<font>
-										<Font name="Arial Bold" size="13.0" />
-									</font>
-								</Button>
-								<Button fx:id="sendButton" contentDisplay="RIGHT" mnemonicParsing="false" onMouseClicked="#handleSendButton" style="-fx-border-radius: 20px; -fx-background-color: #06BF9D#06BF9D #06BF9D#06bf9d; -fx-background-radius: 20px;" text="Invia" textFill="WHITE">
-									<graphic>
-										<ImageView fitHeight="20.0" fitWidth="20.0">
-											<image>
-												<Image url="@icons/send.png" />
-											</image>
-										</ImageView>
-									</graphic>
-									<font>
-										<Font name="Arial Bold" size="13.0" />
-									</font>
-									<HBox.margin>
-										<Insets left="19.0" />
-									</HBox.margin>
-								</Button>
-							</children>
-							<padding>
-								<Insets right="20.0" />
-							</padding>
-						</HBox>
-					</children>
-				</GridPane>
-			</children>
-		</Pane>
-	</bottom>
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.p3mail.application.client.controller.NewMessageController">
 	<top>
 		<GridPane onMouseClicked="#handleCheckIfTextChanged" prefHeight="73.0" prefWidth="600.0" style="-fx-background-color: #044A59#044A59 #044A59#044A59;" BorderPane.alignment="CENTER">
 			<columnConstraints>
@@ -112,4 +76,33 @@
 	<center>
 		<TextArea fx:id="textContent" onMouseClicked="#handleCheckIfTextChanged" prefHeight="200.0" prefWidth="200.0" promptText="Scrivi messaggio" BorderPane.alignment="CENTER" />
 	</center>
+   <bottom>
+						<HBox alignment="CENTER_RIGHT" onMouseClicked="#handleCheckIfTextChanged" prefHeight="39.0" prefWidth="600.0" style="-fx-background-color: #044A59#044A59;" BorderPane.alignment="CENTER">
+							<children>
+								<Button alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" onMouseClicked="#handleCancelButton" prefHeight="28.0" style="-fx-background-radius: 20px; -fx-border-radius: 20px;" text="Annulla" textFill="#06bf9d">
+									<font>
+										<Font name="Arial Bold" size="13.0" />
+									</font>
+								</Button>
+								<Button fx:id="sendButton" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" onMouseClicked="#handleSendButton" style="-fx-border-radius: 20px; -fx-background-color: #06BF9D#06BF9D #06BF9D#06bf9d; -fx-background-radius: 20px;" text="Invia" textFill="WHITE">
+									<graphic>
+										<ImageView fitHeight="20.0" fitWidth="20.0" nodeOrientation="INHERIT">
+											<image>
+												<Image url="@icons/send.png" />
+											</image>
+										</ImageView>
+									</graphic>
+									<font>
+										<Font name="Arial Bold" size="13.0" />
+									</font>
+									<HBox.margin>
+										<Insets left="19.0" />
+									</HBox.margin>
+								</Button>
+							</children>
+							<padding>
+								<Insets right="20.0" />
+							</padding>
+						</HBox>
+   </bottom>
 </BorderPane>

@@ -17,6 +17,8 @@ public class ClientMain extends Application {
         stage.setTitle("Email client");
         stage.setScene(scene);
         stage.show();
+        LoginController loginController = fxmlLoader.getController();
+        loginController.initialize(stage);
     }
 
     @Override
