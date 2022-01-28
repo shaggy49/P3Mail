@@ -16,6 +16,7 @@ import java.util.Vector;
 public class ClientServerConnection implements Runnable {
     private Socket incoming;
     private String userEmailAddress;
+    ObjectInputStream in;
     ObjectOutputStream out;
     private Vector<ClientServerConnection> clients;
     private final Object fileLock = new Object();
@@ -37,7 +38,7 @@ public class ClientServerConnection implements Runnable {
                 InputStream inStream = incoming.getInputStream();
                 OutputStream outStream = incoming.getOutputStream();
 
-                ObjectInputStream in = new ObjectInputStream(inStream);
+                in = new ObjectInputStream(inStream);
                 out = new ObjectOutputStream(outStream);
 
                 userEmailAddress = (String) in.readObject();
@@ -66,6 +67,7 @@ public class ClientServerConnection implements Runnable {
                     ClientRequest request = (ClientRequest) in.readObject(); //è una chiamata bloccante, aspetta che arrivi qualcosa dal canale del socket
                     if(request instanceof DisconnectRequest) {
                         out.writeObject(new DisconnectResponse());
+                        clients.remove(this);
                         break;
                     }
                     else if (request instanceof DeleteRequest) {
@@ -118,7 +120,10 @@ public class ClientServerConnection implements Runnable {
         } finally {
             try {
                 incoming.close();
+                in.close();
+                out.close();
             } catch (IOException e) {
+                System.out.println("eccomi");
                 e.printStackTrace();
             }
         }
