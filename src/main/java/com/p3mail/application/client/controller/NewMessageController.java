@@ -46,7 +46,7 @@ public class NewMessageController {
     private double oldHeight;
     private Client model;
     private Boolean isNewMessage;
-    private List<String> receivers;
+    private List<String> notDuplicateRecipients;
     private boolean alreadyChecked;
     private boolean syntaxIsCorrect;
     private final String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." +
@@ -71,20 +71,28 @@ public class NewMessageController {
         this.isNewMessage = isNewMessage;
         this.socketConnection = socketConnection;
         this.out = out;
-        receivers = new ArrayList<>();
+        notDuplicateRecipients = new ArrayList<>();
         alreadyChecked = true;
         syntaxIsCorrect = true;
         moreRecipientsLabel.setVisible(false);
         if (!isNewMessage) {
             objectField.setEditable(false);
-            objectField.setText("Fwd: " + email.getObject());
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append(email.getReceivers().get(0));
-            for (int i = 1; i < email.getReceivers().size(); i++) {
-                stringBuilder.append(", ").append(email.getReceivers().get(i));
-            }
-            textContent.setText('\n' + "----------Messaggio inoltrato----------" + '\n' + "Da: " + email.getSender() + '\n' + "Data email ricevuta: " + email.getDate() + '\n' + "Oggetto: " + email.getObject() + '\n' + "A: " + stringBuilder + '\n' + "Contenuto: " + email.getText());
-        }
+            if (email.getObject().startsWith("Fwd: "))
+				objectField.setText(email.getObject());
+			else if (email.getObject().startsWith("Re: "))
+				objectField.setText("Fwd: " + email.getObject().substring(4));
+			else
+				objectField.setText("Fwd: " + email.getObject());
+
+			System.out.println(objectField);
+
+			StringBuilder stringBuilder = new StringBuilder();
+			stringBuilder.append(email.getReceivers().get(0));
+			for (int i = 1; i < email.getReceivers().size(); i++) {
+				stringBuilder.append(", ").append(email.getReceivers().get(i));
+			}
+			textContent.setText('\n' + "----------Messaggio inoltrato----------" + '\n' + "Da: " + email.getSender() + '\n' + "Data email ricevuta: " + email.getDate() + '\n' + "Oggetto: " + email.getObject() + '\n' + "A: " + stringBuilder + '\n' + "Contenuto: " + email.getText());
+		}
     }
 
     /**
@@ -94,11 +102,14 @@ public class NewMessageController {
     private boolean emailsSyntaxIsCorrect() {
         if (!alreadyChecked) {
             boolean valid = true;
-            String allRecipients = receiversField.getText();
-            receivers = List.of(allRecipients.split(", "));
-            for (String rec : receivers) {
-                valid = valid && isValid(rec);
-            }
+            List <String> allRecipients = new ArrayList();
+			String recipients = receiversField.getText();
+			allRecipients = List.of(recipients.split(", "));
+			for (String rec : allRecipients) {
+				valid = valid && isValid(rec);
+				if(!notDuplicateRecipients.contains(rec))
+					notDuplicateRecipients.add(rec);
+			}
             alreadyChecked = true;
             syntaxIsCorrect = valid;
         }
@@ -174,9 +185,6 @@ public class NewMessageController {
      *
      * @param mouseEvent
      */
-    /*TODO gestire il caso in cui vengano inseriti due mail uguali tra i destinatari -> deve essere inviata una sola mail
-
-     */
     public void handleSendButton(MouseEvent mouseEvent) throws IOException {
         if (!receiversField.getText().isEmpty() && emailsSyntaxIsCorrect()) {
             moreRecipientsLabel.setVisible(false);
@@ -187,7 +195,7 @@ public class NewMessageController {
 
             Email emailToSend = new Email(
                     model.emailAddressProperty().get(),
-                    receivers,
+                    notDuplicateRecipients,
                     objectField.getText(),
                     textContent.getText());
             System.out.println("You want to send the email: "); //debug purpose

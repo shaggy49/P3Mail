@@ -27,6 +27,7 @@ public class MailServer {
                 clientsConnected.add(connection);
             }
         } catch (IOException e) {
+            // vogliamo silenziarlo???
             e.printStackTrace();
         } finally {
             if(s != null) {

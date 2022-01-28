@@ -109,10 +109,18 @@ public class ReplyController {
                 stage.show();
             } else {
                 String stringBuilder = sendText.getText() + '\n' + '\n' + "----------Messaggio di risposta----------" + '\n' + "Da: " + email.getSender() + '\n' + "Data email: " + email.getDate() + '\n' + "Contenuto: " + email.getText();
+				String objectField = "";
+				if (email.getObject().startsWith("Re: "))
+					objectField = email.getObject();
+				else if (email.getObject().startsWith("Fwd: "))
+					objectField = "Re: " + email.getObject().substring(5);
+				else
+					objectField = "Re: " + email.getObject();
+
                 Email emailToSend = new Email(
                         model.emailAddressProperty().get(),
                         replyReceiver,
-                        "Re: " + email.getObject(),
+                        objectField,
                         stringBuilder.toString());
                 System.out.println("You want to send the email: "); //debug purpose
                 System.out.println(emailToSend);
