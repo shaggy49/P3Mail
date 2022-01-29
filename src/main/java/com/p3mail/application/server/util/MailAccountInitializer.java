@@ -17,9 +17,13 @@ import org.apache.commons.io.FileUtils;
 * */
 public class MailAccountInitializer {
 
-    public static final int INITIAL_MAIL_NUMBER = 10;
+    public static int INITIAL_MAIL_NUMBER = 10;
 
     public static void main(String[] args) {
+
+        if(args.length > 0) {
+            INITIAL_MAIL_NUMBER = Integer.parseInt(args[0]);
+        }
 
         RegisteredClient registeredClient = new RegisteredClient();
         List<String> registeredMailAccounts = registeredClient.getRegisteredUser();

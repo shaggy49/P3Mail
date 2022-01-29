@@ -18,7 +18,7 @@ import java.util.concurrent.Executors;
 
 public class MailServer extends Application {
     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("server.fxml"));
-    //boolean closeConnection = false;
+    boolean closeClientConnection = false;
     ServerSocket s = null;
     ThreadConnection tc = null;
 
@@ -41,6 +41,7 @@ public class MailServer extends Application {
 
 	@Override
 	public void stop() throws Exception {
+        closeClientConnection = true;
 		super.stop();
 		System.exit(0);
 	}
@@ -66,12 +67,13 @@ public class MailServer extends Application {
                 ExecutorService exec = Executors.newFixedThreadPool(N_THREADS);
                 Vector<ClientServerConnection> clientsConnected = new Vector<>();
 
-                while (true) {
+                while (!closeClientConnection) {
                     Socket incoming = s.accept(); // si mette in attesa di richiesta di connessione e la apre
                     ClientServerConnection connection = new ClientServerConnection(incoming, clientsConnected, controller);
                     exec.execute(connection);
                     clientsConnected.add(connection);
                 }
+                exec.shutdown();
             } catch (IOException e) {
                 //e.printStackTrace();
             } finally {
