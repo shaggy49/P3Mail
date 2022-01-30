@@ -243,7 +243,8 @@ public class MainWindowController {
 //			System.out.println("You want to delete the email with id = " + selectedEmail.getId()); //debug purpose
 			if(socketConnection != null) {
 				try {
-					out.writeObject(new DeleteRequest(selectedEmail));
+                    if(out != null)
+					    out.writeObject(new DeleteRequest(selectedEmail));
 				} catch (IOException e) {
 					Alert alert = new Alert(Alert.AlertType.ERROR);
 					alert.setTitle("Error");
@@ -256,11 +257,21 @@ public class MainWindowController {
 	}
 
 	public void setSocketConnection(Socket socketConnection) {
-		this.socketConnection = socketConnection;
+        try {
+            this.socketConnection.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        this.socketConnection = socketConnection;
 	}
 
 	public void setOut(ObjectOutputStream out) {
-		this.out = out;
+        try {
+            this.out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        this.out = out;
 	}
 
 	public String getEmailAddress() {
@@ -272,10 +283,6 @@ public class MainWindowController {
 			if(out != null) {
 				out.writeObject(new DisconnectRequest());
 			}
-//			if(socketConnection != null) {
-//				socketConnection.close();
-//				System.out.println("Connessione terminata");
-//			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

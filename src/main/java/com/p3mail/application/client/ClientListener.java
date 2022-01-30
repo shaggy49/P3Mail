@@ -19,6 +19,7 @@ public class ClientListener implements Runnable{
     MainWindowController controller;
     private Socket socket;
     ObjectInputStream in;
+    ObjectOutputStream out;
 
     public ClientListener(MainWindowController controller, Socket socket) throws IOException {
         this.controller = controller;
@@ -98,18 +99,12 @@ public class ClientListener implements Runnable{
                         break;
                     }
                 } catch (IOException e) {
-                    try {
-                        socket.close();
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
                     Platform.runLater(() -> {
                         Alert alert = new Alert(Alert.AlertType.ERROR);
                         alert.setTitle("Error");
                         alert.setHeaderText("The server doesn't seem connected");
                         alert.show();
                     });
-                    //potrebbe provare ogni tot secondi a riconnettersi (provando a vedere se c'è un server attivo)
                     while(true) {
                         try {
                             Thread.sleep(2000);
@@ -121,12 +116,15 @@ public class ClientListener implements Runnable{
                                     alert.setHeaderText("Server riconnected");
                                     alert.show();
                                 });
-                                ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+                                out = new ObjectOutputStream(socket.getOutputStream());
                                 out.writeObject(controller.getEmailAddress());
                                 in = new ObjectInputStream(socket.getInputStream());
                                 controller.setSocketConnection(socket);
                                 controller.setOut(out);
                                 break;
+                            }
+                            else {
+                                socket.close();
                             }
                         } catch (IOException | InterruptedException ignored) {
                         }
@@ -139,6 +137,8 @@ public class ClientListener implements Runnable{
         } finally {
             try {
                 in.close();
+                if(out != null)
+                    out.close();
                 socket.close();
             } catch (IOException e) {
                 e.printStackTrace();
