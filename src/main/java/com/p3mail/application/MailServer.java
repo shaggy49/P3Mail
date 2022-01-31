@@ -7,8 +7,6 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -74,8 +72,7 @@ public class MailServer extends Application {
                     clientsConnected.add(connection);
                 }
                 exec.shutdown();
-            } catch (IOException e) {
-                //e.printStackTrace();
+            } catch (IOException ignored) {
             } finally {
                 if (s != null) {
                     try {

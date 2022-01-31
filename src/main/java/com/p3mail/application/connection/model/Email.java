@@ -95,6 +95,7 @@ public class Email implements Serializable {
 
     public String classictoString() {
         return "Email{" +
+                "id = '" + id + '\'' +
                 "sender='" + sender + '\'' +
                 ", receivers=" + receivers +
                 ", object='" + object + '\'' +

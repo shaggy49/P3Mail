@@ -28,6 +28,8 @@ public class ClientServerConnection implements Runnable {
      * Constructs a handler.
      *
      * @param in the incoming socket
+     * @param clients vector of clients connected
+     * @param controller server controller
      */
     public ClientServerConnection(Socket in, Vector<ClientServerConnection> clients, ServerController controller) {
         incoming = in;
@@ -194,7 +196,6 @@ public class ClientServerConnection implements Runnable {
         }
 //        writeLock.unlock();
 
-
         outputStream.close();
         fos.close();
     }
@@ -254,6 +255,7 @@ public class ClientServerConnection implements Runnable {
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
+			printToStage(String.format("(%s): connection closed\n", userEmailAddress));
             e.printStackTrace();
         }
         return emailList;

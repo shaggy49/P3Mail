@@ -43,8 +43,6 @@ public class ReplyController {
     private Email email;
     private List<String> replyReceiver = new ArrayList<>();
     private Stage stage;
-    private double oldWidth;
-    private double oldHeight;
 
     /**
      * This method takes the model as parameter to save information about model.
@@ -52,14 +50,15 @@ public class ReplyController {
      * @param isReplyAll
      * @param model
      * @param email
+     * @param stage
      */
     @FXML
-    void initialize(Boolean isReplyAll, Client model, Email email, Socket socketConnection, ObjectOutputStream out, Stage stage) {
+    void initialize(Boolean isReplyAll, Client model, Email email, Stage stage) {
         this.stage = stage;
         this.model = model;
         this.email = email;
-        this.socketConnection = socketConnection;
-        this.out = out;
+        this.socketConnection = model.getSocket();
+        this.out = model.getOut();
         replyReceiver.add(email.getSender());
         if (isReplyAll) {
             receiversLbl.setText("Destinatari:");
@@ -92,11 +91,13 @@ public class ReplyController {
             alert.setHeaderText("Inserisci un messaggio di risposta per inviare la mail");
             alert.showAndWait();
         } else {
+            double oldHeight;
+            double oldWidth;
             if (b.getId().equals("cancelButton")) {
                 FXMLLoader loader = new FXMLLoader((ClientMain.class.getResource("mainWindow.fxml")));
                 Parent root = (Parent) loader.load();
                 MainWindowController newMainWindowController = loader.getController();
-                newMainWindowController.initialize(false, model, socketConnection, out, stage);
+                newMainWindowController.initialize(false, model, stage);
 
                 oldWidth = stage.getWidth();
                 oldHeight = stage.getHeight();
@@ -109,7 +110,7 @@ public class ReplyController {
                 stage.show();
             } else {
                 String stringBuilder = sendText.getText() + '\n' + '\n' + "----------Messaggio di risposta----------" + '\n' + "Da: " + email.getSender() + '\n' + "Data email: " + email.getDate() + '\n' + "Contenuto: " + email.getText();
-				String objectField = "";
+                String objectField = "";
 				if (email.getObject().startsWith("Re: "))
 					objectField = email.getObject();
 				else if (email.getObject().startsWith("Fwd: "))
@@ -125,7 +126,7 @@ public class ReplyController {
                 System.out.println("You want to send the email: "); //debug purpose
                 System.out.println(emailToSend);
                 try {
-                    out.writeObject(new SendRequest(emailToSend));
+                    model.writeOut(new SendRequest(emailToSend));
                 } catch (IOException e) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Error");
@@ -135,7 +136,7 @@ public class ReplyController {
                     FXMLLoader loader = new FXMLLoader((ClientMain.class.getResource("mainWindow.fxml")));
                     Parent root = (Parent) loader.load();
                     MainWindowController newMainWindowController = loader.getController();
-                    newMainWindowController.initialize(false, model, socketConnection, out, stage);
+                    newMainWindowController.initialize(false, model, stage);
 
                     oldWidth = stage.getWidth();
                     oldHeight = stage.getHeight();

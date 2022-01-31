@@ -65,12 +65,12 @@ public class NewMessageController {
      * @param email
      */
     @FXML
-    public void initialize(Boolean isNewMessage, Client model, Email email, Socket socketConnection, ObjectOutputStream out, Stage stage) {
+    public void initialize(Boolean isNewMessage, Client model, Email email, Stage stage) {
         this.stage = stage;
         this.model = model;
         this.isNewMessage = isNewMessage;
-        this.socketConnection = socketConnection;
-        this.out = out;
+        this.socketConnection = model.getSocket();
+        this.out = model.getOut();
         notDuplicateRecipients = new ArrayList<>();
         alreadyChecked = true;
         syntaxIsCorrect = true;
@@ -201,7 +201,7 @@ public class NewMessageController {
             System.out.println("You want to send the email: "); //debug purpose
             System.out.println(emailToSend);
             try {
-                out.writeObject(new SendRequest(emailToSend));
+                model.writeOut(new SendRequest(emailToSend));
             } catch (IOException e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
@@ -211,7 +211,7 @@ public class NewMessageController {
                 FXMLLoader loader = new FXMLLoader((ClientMain.class.getResource("mainWindow.fxml")));
                 Parent root = (Parent) loader.load();
                 MainWindowController newMainWindowController = loader.getController();
-                newMainWindowController.initialize(false, model, socketConnection, out, stage);
+                newMainWindowController.initialize(false, model, stage);
                 oldWidth = stage.getWidth();
                 oldHeight = stage.getHeight();
                 Scene scene = new Scene(root);
@@ -235,7 +235,7 @@ public class NewMessageController {
         FXMLLoader loader = new FXMLLoader((ClientMain.class.getResource("mainWindow.fxml")));
         Parent root = (Parent) loader.load();
         MainWindowController newMainWindowController = loader.getController();
-        newMainWindowController.initialize(false, model, socketConnection, out, stage);
+        newMainWindowController.initialize(false, model, stage);
         Scene scene = new Scene(root);
         Stage stage = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
         stage.setTitle("Email client");

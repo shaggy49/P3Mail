@@ -2,7 +2,6 @@ package com.p3mail.application.client.controller;
 
 import com.p3mail.application.ClientMain;
 import com.p3mail.application.client.model.Client;
-import com.p3mail.application.connection.request.DisconnectRequest;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -37,6 +36,7 @@ public class LoginController {
 
     private Client model;
     private Stage stage;
+    private boolean finalResult;
 
     @FXML
     // This method is called by the FXMLLoader when initialization is complete
@@ -63,6 +63,7 @@ public class LoginController {
             }
 
             try {
+                finalResult = false;
                 connectWithServer();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -73,17 +74,18 @@ public class LoginController {
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
-
-            FXMLLoader loader = new FXMLLoader((ClientMain.class.getResource("mainWindow.fxml")));
-            Parent root = (Parent) loader.load();
-            mainWindowController = loader.getController();
-			mainWindowController.initialize(true, model, socketConnection, out, stage);
-            Scene scene = new Scene(root);
-            Stage stage = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
-            stage.setTitle("Email client");
-            stage.setScene(scene);
-            stage.setResizable(true);
-            stage.show();
+            if(finalResult) {
+                FXMLLoader loader = new FXMLLoader((ClientMain.class.getResource("mainWindow.fxml")));
+                Parent root = (Parent) loader.load();
+                mainWindowController = loader.getController();
+                mainWindowController.initialize(true, model, stage);
+                Scene scene = new Scene(root);
+                Stage stage = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
+                stage.setTitle("Email client");
+                stage.setScene(scene);
+                stage.setResizable(true);
+                stage.show();
+            }
         }
 //		RadioButton selectRadioButton() {
 //			RadioButton selectedRadioButton = (RadioButton) tgEmail.getSelectedToggle();
@@ -96,13 +98,20 @@ public class LoginController {
         System.out.println(nomeHost);
         socketConnection = new Socket(nomeHost, 8189);
         System.out.println("Connection established!");
+
         OutputStream socketOutputStream = socketConnection.getOutputStream();
-
-
         out = new ObjectOutputStream(socketOutputStream);
+
+        ObjectInputStream in = new ObjectInputStream(socketConnection.getInputStream());
         out.writeObject(model.emailAddressProperty().get());
+
         System.out.println("I send my mail address to the server");
 
+        model.setSocket(socketConnection);
+        model.setOut(out);
+        model.setIn(in);
+
+        finalResult = true;
     }
 
     public void closeSocketConnection() {
