@@ -4,6 +4,27 @@ Implementazione di un'architettura client-server per scambio di mail (tramite we
 
 Progetto sviluppato utilizzando Maven, Java e JavaFX.
 
+## Esecuzione
+
+Per permettere la corretta esecuzione dell'applicativo e' necessario utilizzare una versione dei jdk pari o superiore a 17.
+
+Come primo step bisogna quindi eseguire la classe `MailAccountInitializer` che si trova dentro il package `com.p3mail.application.server.util`,
+questa avra' il compito di generare una serie di mock mail in ciascun account.
+
+A questo punto si puo' mandare in run il server (`MailServer`) che si mettera' in ascolto di connessioni dei vari clients, per gestire l'invio e la cancellazione delle
+caselle di posta di un elenco fissato, loggando tutte le operazioni svolte. Gli indirizzi, statici, a disposizione sono tre e sono consultabili nel file `RegisteredClient`, package `com.p3mail.application.server.model`.
+
+Una volta avviato il mail server si possono mandare in esecuzione i vari client (`ClientMain`, per connessioni multiple spuntare sull'IDE il flag apposito). 
+Questi una volta caricati permetteranno all'utente di connettersi ad uno dei tre account associati e eseguire le operazioni consentite: invio mail, inoltro, risposta e cancellamento.
+
+
+## Schermate
+
+![Schermata Login](pic/p3_mail_login.png?raw=true "Login")
+![Schermata Client](pic/p3_mail_client.png?raw=true "Client")
+![Schermata Server](pic/p3_mail_server.png?raw=true "Server")
+
+
 ## Consegna
 Si sviluppi un’applicazione Java che implementi un servizio di posta elettronica organizzato con un mail server che gestisce le caselle di posta elettronica degli utenti e i mail client necessari per permettere agli utenti di accedere alle proprie caselle di posta.
 

@@ -9,8 +9,5 @@
         <module name="p3mail" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="p3mail" target="17" />
-    </bytecodeTargetLevel>
   </component>
 </project>
